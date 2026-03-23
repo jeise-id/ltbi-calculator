@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>TST/IGRA Interpreter v3.0</title>
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --border: #d8d3cc;
+    --border-strong: #b0a89e;
+    --text: #1a1815;
+    --text-muted: #6b6560;
+    --text-faint: #9e9890;
+    --accent: #2d5a3d;
+    --accent-light: #eaf2ed;
+    --accent-border: #82b494;
+    --warn: #7a3d1a;
+    --warn-bg: #fdf3ec;
+    --warn-border: #d4845a;
+    --danger: #6b1a1a;
+    --danger-bg: #fdf0f0;
+    --danger-border: #d45a5a;
+    --info: #1a3d6b;
+    --info-bg: #eef3fd;
+    --info-border: #7aaad4;
+    --mono: 'Consolas', 'Courier New', monospace;
+    --serif: 'Georgia', 'Times New Roman', serif;
+    --sans: 'Segoe UI', 'Calibri', 'Tahoma', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .page-header {
+    background: var(--text);
+    color: #f5f3ef;
+    padding: 16px 28px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    border-bottom: 3px solid var(--accent);
+    flex-wrap: wrap;
+  }
+
+  .page-header h1 {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 0.01em;
+  }
+
+  .page-header .version {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-border);
+    letter-spacing: 0.05em;
+  }
+
+  .page-header .subtitle {
+    font-size: 12px;
+    color: #a09890;
+    margin-left: auto;
+    font-style: italic;
+    font-family: var(--serif);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 370px;
+    gap: 0;
+    max-width: 1080px;
+    margin: 24px auto;
+    padding: 0 18px;
+  }
+
+  .form-panel { padding-right: 24px; }
+
+  .results-panel {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+  }
+
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 9px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    background: var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .section-title {
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+  }
+
+  .section-body { padding: 14px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-row:last-child { margin-bottom: 0; }
+  .form-row.single { grid-template-columns: 1fr; }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .field label .req { color: var(--warn); margin-left: 2px; }
+
+  select, input[type="number"] {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 7px 9px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 0.15s;
+    cursor: pointer;
+  }
+
+  select { appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%239e9890' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    padding-right: 26px;
+  }
+
+  select:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(45,90,61,0.09);
+  }
+  select:hover, input[type="number"]:hover { border-color: var(--border-strong); }
+
+  .subfield {
+    margin-top: 10px;
+    padding: 11px;
+    background: var(--surface2);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .hidden { display: none !important; }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+    user-select: none;
+    background: var(--surface);
+  }
+  .check-item:hover { background: var(--surface2); }
+  .check-item input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--accent);
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .check-item.checked { background: var(--accent-light); border-color: var(--accent-border); }
+  .check-label { font-size: 12px; line-height: 1.35; color: var(--text); }
+  .check-rr { font-family: var(--mono); font-size: 10px; color: var(--text-faint); margin-top: 1px; display: block; }
+
+  /* Results panel */
+  .results-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .results-header {
+    background: var(--text);
+    color: #f5f3ef;
+    padding: 11px 14px;
+    font-family: var(--serif);
+    font-size: 14px;
+  }
+
+  .results-placeholder {
+    padding: 30px 18px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 13px;
+    font-style: italic;
+    font-family: var(--serif);
+  }
+
+  .result-block {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-block:last-child { border-bottom: none; }
+
+  .result-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-faint);
+    margin-bottom: 3px;
+  }
+
+  .result-value {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .result-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; }
+
+  .result-interp {
+    margin-top: 7px;
+    padding: 7px 9px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 600;
+    border-left: 3px solid;
+  }
+  .interp-low  { background: var(--accent-light); color: var(--accent);  border-color: var(--accent); }
+  .interp-mod  { background: var(--warn-bg);      color: var(--warn);    border-color: var(--warn-border); }
+  .interp-high { background: var(--danger-bg);    color: var(--danger);  border-color: var(--danger-border); }
+
+  .detail-rows { margin-top: 7px; }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 11px;
+    gap: 8px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .dk { color: var(--text-muted); flex-shrink: 0; }
+  .detail-row .dv { font-family: var(--mono); color: var(--text); text-align: right; }
+
+  .hep-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 7px;
+  }
+  .hep-table th {
+    background: var(--surface2);
+    text-align: left;
+    padding: 4px 7px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .hep-table td {
+    padding: 4px 7px;
+    border: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+  .hep-table tr.current-age { background: var(--accent-light); font-weight: 600; }
+
+  .alert-box {
+    padding: 9px 11px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid;
+    line-height: 1.5;
+  }
+  .alert-info { background: var(--info-bg); border-color: var(--info-border); color: var(--info); }
+
+  .run-btn {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s;
+    margin-top: 4px;
+  }
+  .run-btn:hover { background: #224830; }
+
+  .clear-btn {
+    width: 100%;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 7px 20px;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.1s;
+  }
+  .clear-btn:hover { background: var(--surface2); }
+
+  .disclaimer {
+    font-size: 10px;
+    color: var(--text-faint);
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+    font-style: italic;
+  }
+
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; padding: 0 10px; }
+    .form-panel { padding-right: 0; margin-bottom: 16px; }
+    .results-panel { position: static; }
+    .checkbox-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>IGRA Interpreter</h1>
+  <span class="version">v3.0 · Menzies et al. 2008</span>
+  <span class="subtitle">LTBI Risk Estimation Tool — IGRA positive</span>
+</div>
+
+<div class="layout">
+  <div class="form-panel">
+
+    <!-- 01 Demographics -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">Demographics</span>
+      </div>
+      <div class="section-body">
+        <div class="form-row">
+          <div class="field">
+            <label>Age (years) <span class="req">*</span></label>
+            <input type="number" id="age" min="1" max="99" placeholder="e.g. 45">
+          </div>
+          <div class="field">
+            <label>Country of Birth <span class="req">*</span></label>
+            <select id="country" onchange="updateCountryFields()">
+              <option value="">— Select country —</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="immigrantField" class="subfield hidden">
+          <div class="field">
+            <label>Age at Immigration to Low-TB Country</label>
+            <input type="number" id="ageImmigration" min="0" max="99" placeholder="Age when immigrated (leave blank if N/A)">
+          </div>
+          <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">Only applies if immigrated to Canada, US, UK, Western Europe or Australia</div>
+        </div>
+
+        <div id="raceField" class="subfield hidden">
+          <div class="field">
+            <label>Race / Ethnicity (US-born only)</label>
+            <select id="raceEthnicity">
+              <option value="other">Other / Not specified</option>
+              <option value="white">White / Caucasian</option>
+              <option value="black">Non-Hispanic Black / African-American</option>
+              <option value="hispanic">Hispanic</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="aboriginalField" class="subfield hidden">
+          <div class="field">
+            <label>Aboriginal / Indigenous Status (Canada-born)</label>
+            <select id="aboriginal">
+              <option value="no">Non-Aboriginal</option>
+              <option value="yes">Aboriginal / First Nations / Indigenous</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 BCG & Contact -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-title">BCG &amp; TB Contact History</span>
+      </div>
+      <div class="section-body">
+        <div class="form-row">
+          <div class="field">
+            <label>BCG Vaccination Status</label>
+            <select id="bcgStatus">
+              <option value="none">Not vaccinated / Unknown</option>
+              <option value="before2">Vaccinated before age 2</option>
+              <option value="2orafter">Vaccinated age 2 or older</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Recent Contact with Active TB</label>
+            <select id="tbContact">
+              <option value="none">No recent contact</option>
+              <option value="casual">Casual contact (≤4 hrs/wk)</option>
+              <option value="close">Close contact (household / &gt;4 hrs/wk)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Risk Factors -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-title">Comorbid Risk Factors</span>
+      </div>
+      <div class="section-body">
+        <div class="alert-box alert-info">Select all that currently apply. Highest applicable RR will be used in ARD calculation.</div>
+        <div class="checkbox-grid" id="riskFactorGrid"></div>
+      </div>
+    </div>
+
+    <!-- 05 INH note -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <span class="section-title">INH Hepatotoxicity Risk</span>
+      </div>
+      <div class="section-body">
+        <div style="font-size:12px;color:var(--text-muted);">Estimated from age (entered above). Based on receiving INH ≥6 months. Risk increases with concomitant viral hepatitis, liver disease, or daily alcohol use.</div>
+      </div>
+    </div>
+
+    <button class="run-btn" onclick="calculate()">&#9654; Calculate Risk</button>
+    <button class="clear-btn" onclick="resetForm()">Reset Form</button>
+
+  </div><!-- /form-panel -->
+
+  <!-- Results Panel -->
+  <div class="results-panel">
+    <div class="results-card">
+      <div class="results-header">Results</div>
+      <div id="resultsBody">
+        <div class="results-placeholder">Complete the form and click<br><em>Calculate Risk</em> to view results.</div>
+      </div>
+      <div class="disclaimer">
+        For adults tested with standard tuberculin (5TU PPDS or 2TU RT-23) and/or commercial IGRA. Algorithm: Menzies et al. (2008), Canadian TB Standards. Clinical decision support only — not a substitute for clinical judgment.
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<script>
+// ============================================================
+// COUNTRY DATA  (smear-positive incidence / 49 = ARI)
+// ============================================================
+const countryData = {
+  "Afghanistan":{"ari":153/49/100000,"ntm":"low"},
+  "Albania":{"ari":14/49/100000,"ntm":"low"},
+  "Algeria":{"ari":21/49/100000,"ntm":"low"},
+  "Angola":{"ari":294/49/100000,"ntm":"high"},
+  "Argentina":{"ari":23/49/100000,"ntm":"mod"},
+  "Australia":{"ari":4/49/100000,"ntm":"low"},
+  "Bangladesh":{"ari":225/49/100000,"ntm":"high"},
+  "Bolivia":{"ari":122/49/100000,"ntm":"mod"},
+  "Brazil":{"ari":40/49/100000,"ntm":"mod"},
+  "Cambodia":{"ari":484/49/100000,"ntm":"high"},
+  "Cameroon":{"ari":177/49/100000,"ntm":"high"},
+  "Canada":{"ari":1.6/49/100000,"ntm":"low"},
+  "Central African Republic":{"ari":285/49/100000,"ntm":"high"},
+  "Chile":{"ari":12/49/100000,"ntm":"mod"},
+  "China":{"ari":97/49/100000,"ntm":"high"},
+  "Colombia":{"ari":33/49/100000,"ntm":"mod"},
+  "Côte d'Ivoire":{"ari":280/49/100000,"ntm":"high"},
+  "Dem. Rep. Congo":{"ari":326/49/100000,"ntm":"high"},
+  "Ecuador":{"ari":72/49/100000,"ntm":"mod"},
+  "Ethiopia":{"ari":378/49/100000,"ntm":"mod"},
+  "France":{"ari":8/49/100000,"ntm":"low"},
+  "Germany":{"ari":5/49/100000,"ntm":"low"},
+  "Ghana":{"ari":127/49/100000,"ntm":"high"},
+  "Guatemala":{"ari":64/49/100000,"ntm":"mod"},
+  "Guinea":{"ari":328/49/100000,"ntm":"high"},
+  "India":{"ari":168/49/100000,"ntm":"high"},
+  "Indonesia":{"ari":244/49/100000,"ntm":"high"},
+  "Iran":{"ari":14/49/100000,"ntm":"low"},
+  "Iraq":{"ari":64/49/100000,"ntm":"low"},
+  "Japan":{"ari":24/49/100000,"ntm":"low"},
+  "Kazakhstan":{"ari":153/49/100000,"ntm":"low"},
+  "Kenya":{"ari":290/49/100000,"ntm":"high"},
+  "Lesotho":{"ari":476/49/100000,"ntm":"mod"},
+  "Liberia":{"ari":293/49/100000,"ntm":"high"},
+  "Malawi":{"ari":452/49/100000,"ntm":"high"},
+  "Malaysia":{"ari":102/49/100000,"ntm":"high"},
+  "Mexico":{"ari":23/49/100000,"ntm":"mod"},
+  "Morocco":{"ari":74/49/100000,"ntm":"low"},
+  "Mozambique":{"ari":529/49/100000,"ntm":"high"},
+  "Myanmar":{"ari":419/49/100000,"ntm":"high"},
+  "Nepal":{"ari":163/49/100000,"ntm":"mod"},
+  "Netherlands":{"ari":5/49/100000,"ntm":"low"},
+  "New Zealand":{"ari":6/49/100000,"ntm":"low"},
+  "Niger":{"ari":161/49/100000,"ntm":"mod"},
+  "Nigeria":{"ari":298/49/100000,"ntm":"high"},
+  "North Korea":{"ari":345/49/100000,"ntm":"low"},
+  "Pakistan":{"ari":231/49/100000,"ntm":"high"},
+  "Papua New Guinea":{"ari":300/49/100000,"ntm":"high"},
+  "Peru":{"ari":131/49/100000,"ntm":"mod"},
+  "Philippines":{"ari":484/49/100000,"ntm":"high"},
+  "Russia":{"ari":93/49/100000,"ntm":"low"},
+  "Rwanda":{"ari":330/49/100000,"ntm":"high"},
+  "Sierra Leone":{"ari":584/49/100000,"ntm":"high"},
+  "Somalia":{"ari":572/49/100000,"ntm":"mod"},
+  "South Africa":{"ari":718/49/100000,"ntm":"mod"},
+  "South Korea":{"ari":76/49/100000,"ntm":"low"},
+  "Sri Lanka":{"ari":59/49/100000,"ntm":"high"},
+  "Sudan":{"ari":117/49/100000,"ntm":"mod"},
+  "Eswatini/Swaziland":{"ari":1262/49/100000,"ntm":"mod"},
+  "Tanzania":{"ari":175/49/100000,"ntm":"high"},
+  "Thailand":{"ari":130/49/100000,"ntm":"high"},
+  "Timor-Leste":{"ari":498/49/100000,"ntm":"high"},
+  "Uganda":{"ari":216/49/100000,"ntm":"high"},
+  "Ukraine":{"ari":80/49/100000,"ntm":"low"},
+  "United Kingdom":{"ari":12/49/100000,"ntm":"low"},
+  "United States":{"ari":3/49/100000,"ntm":"low"},
+  "Uzbekistan":{"ari":107/49/100000,"ntm":"low"},
+  "Venezuela":{"ari":32/49/100000,"ntm":"mod"},
+  "Vietnam":{"ari":263/49/100000,"ntm":"high"},
+  "Zambia":{"ari":466/49/100000,"ntm":"high"},
+  "Zimbabwe":{"ari":572/49/100000,"ntm":"high"},
+  "Other (high burden >100/100k)":{"ari":150/49/100000,"ntm":"mod"},
+  "Other (medium burden 20–100/100k)":{"ari":50/49/100000,"ntm":"mod"},
+  "Other (low burden <20/100k)":{"ari":10/49/100000,"ntm":"low"}
+};
+
+const specialCountries = { "United States":"us", "Canada":"canada" };
+
+const ntmRates = {
+  "low":  {"5-9":0.05,"10-14":0.02,"15+":0.01},
+  "mod":  {"5-9":0.15,"10-14":0.07,"15+":0.03},
+  "high": {"5-9":0.25,"10-14":0.10,"15+":0.05}
+};
+
+const bcgRates = {
+  "before2": {"5-9":0.042,"10-14":0.053,"15+":0.028},
+  "2orafter":{"5-9":0.258,"10-14":0.087,"15+":0.078}
+};
+
+const riskFactors = [
+  {id:"hiv",       label:"HIV infection",                      rr:50,  note:"RR 50"},
+  {id:"transplant",label:"Solid organ transplant",             rr:25,  note:"RR 25"},
+  {id:"tnf",       label:"Anti-TNF therapy",                   rr:25,  note:"RR 25"},
+  {id:"haem",      label:"Haematologic malignancy",            rr:16,  note:"RR 16"},
+  {id:"silicosis", label:"Silicosis",                          rr:19,  note:"RR 19"},
+  {id:"ckd",       label:"CKD / haemodialysis",                rr:10,  note:"RR 10"},
+  {id:"dm",        label:"Diabetes mellitus",                  rr:2.7, note:"RR 2.7"},
+  {id:"gi",        label:"Gastrectomy / jejunoileal bypass",   rr:5,   note:"RR 5"},
+  {id:"ibw",       label:"≥10% below ideal body weight",       rr:2,   note:"RR 2"},
+  {id:"smoking",   label:"Smoker",                             rr:2,   note:"RR 2"},
+  {id:"alcohol",   label:"Alcohol / substance use disorder",   rr:2.6, note:"RR 2.6"},
+  {id:"cxr",       label:"Fibrotic changes on CXR (old TB)",   rr:6,   note:"RR 6"},
+  {id:"recent",    label:"Recently infected (<2 years)",       rr:15,  note:"RR 15 yrs 1–2"},
+  {id:"immunosupp",label:"Other immunosuppression (steroids)", rr:5,   note:"RR 5"},
+  {id:"cancer",    label:"Solid organ malignancy",             rr:2,   note:"RR 2"},
+];
+
+function inhHepRisk(age) {
+  if (age < 20) return 0;
+  if (age < 35) return 0.003;
+  if (age < 50) return 0.012;
+  if (age < 65) return 0.023;
+  return 0.08;
+}
+
+function inhAgeGroup(age) {
+  if (age < 20) return 0;
+  if (age < 35) return 1;
+  if (age < 50) return 2;
+  if (age < 65) return 3;
+  return 4;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function initCountrySelect() {
+  const sel = document.getElementById('country');
+  Object.keys(countryData).sort().forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+function initRiskFactors() {
+  const grid = document.getElementById('riskFactorGrid');
+  riskFactors.forEach(rf => {
+    const div = document.createElement('label');
+    div.className = 'check-item';
+    div.id = 'lbl_' + rf.id;
+    div.innerHTML = `<input type="checkbox" id="${rf.id}" onchange="toggleCheck(this)">
+      <span class="check-label">${rf.label}<span class="check-rr">${rf.note}</span></span>`;
+    grid.appendChild(div);
+  });
+}
+
+function toggleCheck(cb) {
+  cb.closest('.check-item').classList.toggle('checked', cb.checked);
+}
+
+function updateCountryFields() {
+  const c = document.getElementById('country').value;
+  const type = specialCountries[c] || 'other';
+  const data = countryData[c];
+  const ari_per_100k = data ? data.ari * 49 * 100000 : 999;
+  const isLowTB = ari_per_100k < 20;
+
+  document.getElementById('immigrantField').classList.toggle('hidden', isLowTB || c === '');
+  document.getElementById('raceField').classList.toggle('hidden', type !== 'us');
+  document.getElementById('aboriginalField').classList.toggle('hidden', type !== 'canada');
+}
+
+// ============================================================
+// CALCULATION
+// ============================================================
+function calculate() {
+  // TST not performed — IGRA positive assumed for all patients in this workflow
+  const tstSize = 'not_done';
+  const igra    = 'positive';
+  const age     = parseInt(document.getElementById('age').value);
+  const country = document.getElementById('country').value;
+
+  if (!country) { alert('Please select a country of birth.'); return; }
+  if (!age || age < 1 || age > 99) { alert('Please enter a valid age (1–99).'); return; }
+
+  const cData = countryData[country] || {ari:10/49/100000, ntm:'low'};
+  const ari = cData.ari;
+  const ntm = cData.ntm;
+  const type = specialCountries[country] || 'other';
+
+  const bcg        = document.getElementById('bcgStatus').value;
+  const contact    = document.getElementById('tbContact').value;
+  const race       = document.getElementById('raceEthnicity').value;
+  const aboriginal = document.getElementById('aboriginal').value;
+  const ageImm     = parseInt(document.getElementById('ageImmigration').value) || null;
+
+  // Ethnicity factor e
+  let e = 1;
+  if (type === 'us') {
+    if (race === 'black') e = 3.09;
+    else if (race === 'hispanic') e = 3.66;
+  } else if (type === 'canada' && aboriginal === 'yes') {
+    e = 1.55;
+  }
+
+  // Contact factor c
+  const c = contact === 'close' ? 0.40 : contact === 'casual' ? 0.08 : 0;
+
+  // Years at risk (capped at age of immigration if applicable)
+  const yearsAtRisk = (ageImm && ageImm > 0 && ageImm < age) ? ageImm : age;
+
+  // pLTBI
+  let pLTBI = 1 - Math.pow(1 - ari, yearsAtRisk);
+  pLTBI = Math.min(1 - (1 - pLTBI) * (1 - c), 0.99);
+
+  // FP rates
+  let fpBCG = 0, fpNTM = 0, ppvTST = null;
+  if (tstSize !== 'not_done') {
+    fpBCG = (bcg !== 'none' && bcgRates[bcg]) ? (bcgRates[bcg][tstSize] || 0) : 0;
+    fpNTM = ntmRates[ntm][tstSize] || 0;
+    const num = e * pLTBI;
+    const den = e * pLTBI + fpBCG + fpNTM;
+    ppvTST = den > 0 ? Math.min(num / den, 1) : 0;
+  }
+
+  // Final PPV
+  const PPVIGRA = 0.98;
+  let ppv = 0, ppvMethod = '';
+  if (tstSize === 'not_done' && igra === 'not_done') {
+    ppv = 0; ppvMethod = 'No test performed';
+  } else if (tstSize === 'not_done' && igra === 'negative') {
+    ppv = 0; ppvMethod = 'IGRA negative, TST not done → PPV = 0';
+  } else if (tstSize === 'not_done' && igra === 'positive') {
+    ppv = PPVIGRA; ppvMethod = 'TST not done, IGRA positive → PPVIGRA';
+  } else if (igra === 'not_done' || igra === 'negative') {
+    ppv = ppvTST;
+    ppvMethod = igra === 'negative' ? 'IGRA negative (ignored) → PPVTST' : 'IGRA not done → PPVTST';
+  } else {
+    // Both positive
+    ppv = 1 - (1 - ppvTST) * (1 - PPVIGRA);
+    ppvMethod = 'Both TST & IGRA positive → combined';
+  }
+  ppv = Math.min(ppv || 0, 1);
+
+  // Risk factors — highest RR
+  const recentlyInfected = document.getElementById('recent').checked;
+  let maxRR = 1;
+  let appliedFactors = [];
+  riskFactors.forEach(rf => {
+    const cb = document.getElementById(rf.id);
+    if (cb && cb.checked) {
+      appliedFactors.push(rf);
+      if (rf.id !== 'recent' && rf.rr > maxRR) maxRR = rf.rr;
+    }
+  });
+
+  // ARD
+  const baseClose = 0.05; // years 1-2 close contact
+  const baseNormal = 0.001;
+  const recentRR = recentlyInfected ? 15 : 1;
+
+  let ard12, ardAfter;
+  if (contact === 'close') {
+    ard12    = ppv * baseClose    * Math.max(maxRR, recentRR);
+    ardAfter = ppv * baseNormal   * maxRR;
+  } else {
+    ard12    = ppv * baseNormal   * Math.max(maxRR, recentRR);
+    ardAfter = ppv * baseNormal   * maxRR;
+  }
+
+  const yearsTo80 = Math.max(80 - age, 0);
+  let crd = yearsTo80 <= 2
+    ? ard12 * yearsTo80
+    : ard12 * 2 + ardAfter * (yearsTo80 - 2);
+  crd = Math.min(crd, 1);
+
+  const inhRisk = inhHepRisk(age);
+  const inhGroup = inhAgeGroup(age);
+
+  renderResults({ppv, ppvTST, fpBCG, fpNTM, pLTBI, e, ppvMethod,
+    ard12, ardAfter, crd, inhRisk, inhGroup, age, yearsTo80,
+    maxRR, appliedFactors, contact, recentlyInfected});
+}
+
+function pct(v, d=1) { return (v*100).toFixed(d) + '%'; }
+
+function renderResults(r) {
+  const ppvClass = r.ppv < 0.05 ? 'interp-low' : r.ppv < 0.30 ? 'interp-mod' : 'interp-high';
+  const ppvLabel = r.ppv < 0.05 ? 'Low probability of LTBI'
+                 : r.ppv < 0.30 ? 'Moderate probability of LTBI'
+                 : 'High probability of LTBI';
+
+  const ardClass = r.ard12 < 0.002 ? 'interp-low' : r.ard12 < 0.01 ? 'interp-mod' : 'interp-high';
+  const ardLabel = r.ard12 < 0.002 ? 'Low annual risk'
+                 : r.ard12 < 0.01  ? 'Moderate — LTBI treatment generally indicated'
+                 : 'High — LTBI treatment strongly indicated';
+
+  const factorsHtml = r.appliedFactors.length
+    ? r.appliedFactors.map(f=>`<div class="detail-row"><span class="dk">${f.label}</span><span class="dv">×${f.rr}</span></div>`).join('')
+    : '<div style="font-size:11px;color:var(--text-faint);font-style:italic;padding:3px 0;">None selected</div>';
+
+  const hepRows = [
+    ['<20 yrs','0%'], ['20–34 yrs','0.3%'], ['35–49 yrs','1.2%'], ['50–64 yrs','2.3%'], ['≥65 yrs','8.0%']
+  ].map((row, i) => `<tr class="${i===r.inhGroup?'current-age':''}"><td>${row[0]}</td><td>${row[1]}</td></tr>`).join('');
+
+  document.getElementById('resultsBody').innerHTML = `
+    <div>
+      <div class="result-block">
+        <div class="result-label">Positive Predictive Value (PPV)</div>
+        <div class="result-value">${pct(r.ppv)}</div>
+        <div class="result-sub">Probability of true latent TB infection</div>
+        <div class="result-interp ${ppvClass}">${ppvLabel}</div>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dk">Method</span><span class="dv" style="font-size:10px;font-family:var(--sans)">IGRA positive, TST not done → PPVIGRA (fixed)</span></div>
+          <div class="detail-row"><span class="dk">pLTBI (background exposure)</span><span class="dv">${pct(r.pLTBI)}</span></div>
+          ${r.e!==1?`<div class="detail-row"><span class="dk">Ethnicity factor (e)</span><span class="dv">×${r.e}</span></div>`:''}
+        </div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-label">Annual Risk of Disease (ARD)</div>
+        <div class="result-value">${pct(r.ard12,2)}</div>
+        <div class="result-sub">Yrs 1–2${r.ardAfter!==r.ard12?` &nbsp;·&nbsp; After yr 2: ${pct(r.ardAfter,2)}`:''}
+          ${r.contact==='close'?'<br><span style="color:var(--warn)">↑ Close contact baseline (5%/yr, yrs 1–2)</span>':''}
+          ${r.recentlyInfected?'<br><span style="color:var(--warn)">↑ Recently infected ×15 applied</span>':''}
+        </div>
+        <div class="result-interp ${ardClass}">${ardLabel}</div>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dk">Highest RR applied</span><span class="dv">×${r.maxRR}</span></div>
+          ${factorsHtml}
+        </div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-label">Cumulative Risk to Age 80</div>
+        <div class="result-value">${pct(r.crd,1)}</div>
+        <div class="result-sub">${r.yearsTo80} years remaining · PPV × ARD × years</div>
+      </div>
+
+      <div class="result-block">
+        <div class="result-label">INH Hepatotoxicity Risk</div>
+        <div class="result-value" style="font-size:18px;">${pct(r.inhRisk,1)}</div>
+        <div class="result-sub">For ≥6 months INH (age ${r.age}) — highlighted row below</div>
+        <table class="hep-table">
+          <tr><th>Age Group</th><th>INH Hepatitis Risk</th></tr>
+          ${hepRows}
+        </table>
+      </div>
+    </div>`;
+}
+
+function resetForm() {
+  ['country','bcgStatus','tbContact','raceEthnicity','aboriginal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.selectedIndex = 0;
+  });
+  document.getElementById('age').value = '';
+  document.getElementById('ageImmigration').value = '';
+  riskFactors.forEach(rf => {
+    const cb = document.getElementById(rf.id);
+    if (cb) { cb.checked = false; cb.closest('.check-item').classList.remove('checked'); }
+  });
+  ['immigrantField','raceField','aboriginalField'].forEach(id =>
+    document.getElementById(id).classList.add('hidden'));
+  document.getElementById('resultsBody').innerHTML =
+    '<div class="results-placeholder">Complete the form and click<br><em>Calculate Risk</em> to view results.</div>';
+}
+
+initCountrySelect();
+initRiskFactors();
+</script>
+</body>
+</html>

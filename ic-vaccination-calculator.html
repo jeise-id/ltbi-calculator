@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Australian IC Vaccination Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif; background: #eef2f7; color: #1e293b; line-height: 1.45; font-size: 13px; padding: 16px; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  .hdr { background: linear-gradient(135deg, #0f172a, #1e3a5f); color: #fff; padding: 14px 18px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
+  .hdr h1 { font-size: 17px; font-weight: 700; }
+  .hdr-sub { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+  .body-wrap { background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px; padding-bottom: 16px; }
+  .sec { padding: 10px 16px; }
+  .sec-line { border-bottom: 1px solid #e2e8f0; }
+  .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px; cursor: default; }
+  .lbl { font-size: 10px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 2px; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; }
+  input[type="number"] { padding: 5px 8px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 13px; width: 65px; background: #fff; font-family: inherit; }
+  select { padding: 5px 8px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 12px; background: #fff; cursor: pointer; font-family: inherit; }
+  .radio-group { display: flex; gap: 10px; }
+  .radio-group label { display: flex; align-items: center; gap: 4px; font-size: 12px; cursor: pointer; }
+  .btn-reset { padding: 8px 20px; background: #dc2626; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; }
+  .btn-reset:hover { background: #b91c1c; }
+  .btn-clear { background: #fff; border: 1px solid #dc2626; border-radius: 5px; padding: 3px 12px; font-size: 11px; cursor: pointer; color: #dc2626; font-weight: 600; font-family: inherit; }
+  .btn-clear:hover { background: #fef2f2; }
+  .btn-print { padding: 8px 20px; background: #1e3a5f; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-print:hover { background: #172e4f; }
+  .cnt { background: #2563eb; color: #fff; border-radius: 10px; padding: 0 7px; font-size: 10px; font-weight: 700; margin-left: 4px; }
+  .cnt-green { background: #16a34a; }
+  .cat-hdr { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; background: #e2e8f0; border-radius: 5px; cursor: pointer; margin-bottom: 3px; user-select: none; }
+  .cat-hdr:hover { background: #d1d8e4; }
+  .cat-title { font-size: 12px; font-weight: 700; color: #334155; }
+  .th-list { max-height: 350px; overflow-y: auto; }
+  .th-item { display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 18px; font-size: 12px; cursor: pointer; border-radius: 4px; line-height: 1.3; }
+  .th-item:hover { background: #f1f5f9; }
+  .th-item.sel { background: #eff6ff; }
+  .th-item input { cursor: pointer; accent-color: #2563eb; }
+  .th-label { flex: 1; }
+  .badge { display: inline-block; padding: 0 6px; border-radius: 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+  .badge-none { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+  .badge-mild { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+  .badge-moderate { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+  .badge-severe { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+  .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 6px; }
+  .kv-item { display: flex; align-items: center; gap: 5px; padding: 3px 8px; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .kv-item:hover { background: #f1f5f9; }
+  .kv-item.sel { background: #f0fdf4; }
+  .kv-item input { cursor: pointer; accent-color: #16a34a; }
+  .kv-live { font-size: 9px; color: #dc2626; font-weight: 700; }
+  .kv-summary { font-size: 11px; color: #64748b; margin-top: 3px; }
+  .level-box { border-radius: 6px; padding: 10px 14px; margin-bottom: 8px; border-width: 2px; border-style: solid; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .level-box .overall-label { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #64748b; }
+  .level-box .overall-value { font-size: 20px; font-weight: 700; }
+  .level-box .indiv { text-align: right; font-size: 11px; color: #64748b; }
+  .alert-box { border-radius: 5px; padding: 6px 10px; margin-bottom: 6px; font-size: 12px; }
+  .alert-combo { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+  .alert-note { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 4px 10px; margin-bottom: 3px; font-size: 11px; }
+  .alert-pretreat { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: 11px; padding: 5px 10px; margin-top: 6px; }
+  .alert-ceased { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 11px; padding: 5px 10px; margin-top: 6px; }
+  .washout-box { margin-bottom: 8px; padding: 8px; background: #fff; border: 1px solid #e2e8f0; border-radius: 5px; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; margin-top: 4px; }
+  .section-label-action { color: #1e40af; }
+  .section-label-done { color: #16a34a; }
+  .section-label-consider { color: #94a3b8; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.action-table th { padding: 5px 7px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #334155; border-bottom: 2px solid #cbd5e1; background: #e2e8f0; }
+  table.action-table td { padding: 5px 7px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  table.action-table tr.row-ci { background: #fef2f2; }
+  table.done-table { opacity: 0.75; }
+  table.done-table td { padding: 4px 7px; border-bottom: 1px solid #e2e8f0; }
+  table.done-table tr { background: #f0fdf4; }
+  table.consider-table { opacity: 0.6; }
+  table.consider-table td { padding: 4px 7px; border-bottom: 1px solid #e2e8f0; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+  .dot-done { background: #16a34a; } .dot-partial { background: #d97706; } .dot-ci { background: #dc2626; }
+  .dot-action { background: #dc2626; } .dot-due { background: #2563eb; } .dot-consider { background: #94a3b8; }
+  .type-live { color: #dc2626; font-weight: 700; font-size: 10px; }
+  .type-nonlive { color: #16a34a; font-weight: 700; font-size: 10px; }
+  .nip-yes { color: #16a34a; font-weight: 700; font-size: 11px; }
+  .nip-no { color: #94a3b8; font-weight: 700; font-size: 11px; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+  .info-sero { padding: 8px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 5px; font-size: 11px; }
+  .info-contacts { padding: 8px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 5px; font-size: 11px; }
+  .btn-row { margin-top: 12px; display: flex; justify-content: center; gap: 10px; }
+  .disclaimer { margin-top: 10px; padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; font-size: 9px; color: #94a3b8; }
+  .empty { padding: 32px 16px; text-align: center; color: #94a3b8; }
+  .empty-icon { font-size: 34px; margin-bottom: 4px; }
+  .empty-text { font-size: 14px; font-weight: 500; }
+  .empty-sub { font-size: 12px; margin-top: 2px; }
+  .ci-tag { color: #dc2626; font-size: 10px; display: block; }
+  .v-name { font-weight: 600; }
+  .v-notes { font-size: 11px; color: #475569; }
+  .v-status { font-size: 11px; }
+  .v-schedule { font-size: 11px; }
+  @media (max-width: 700px) {
+    .info-grid, .kv-grid { grid-template-columns: 1fr; }
+    .level-box { flex-direction: column; align-items: flex-start; }
+    .level-box .indiv { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+const THERAPY_CATEGORIES = {
+  biologics: { label: "Biological Therapies", therapies: {
+    antiTNF_monoclonal: { label: "Anti-TNF monoclonal (adalimumab, infliximab, golimumab, certolizumab)", level: "moderate", washout: "3 months" },
+    etanercept: { label: "Soluble TNF receptor (etanercept)", level: "moderate", washout: "1 month" },
+    rituximab: { label: "Anti-CD20 (rituximab, ocrelizumab, ofatumumab)", level: "severe", washout: "6\u201312 months (B-cell recovery dependent)" },
+    alemtuzumab: { label: "Anti-CD52 (alemtuzumab)", level: "severe", washout: "12 months" },
+    antiIL6: { label: "Anti-IL-6R (tocilizumab, sarilumab)", level: "moderate", washout: "3 months" },
+    antiIL17: { label: "Anti-IL-17 (secukinumab, ixekizumab, bimekizumab)", level: "mild", washout: "3 months" },
+    antiIL12_23: { label: "Anti-IL-12/23 (ustekinumab)", level: "mild", washout: "3 months" },
+    antiIL23: { label: "Anti-IL-23 (guselkumab, risankizumab, tildrakizumab)", level: "mild", washout: "3 months" },
+    antiIL4_13: { label: "Anti-IL-4/13 (dupilumab)", level: "mild", washout: "Not defined \u2014 likely minimal" },
+    abatacept: { label: "CTLA4-Ig (abatacept)", level: "moderate", washout: "3 months" },
+    vedolizumab: { label: "Anti-integrin \u2014 gut-selective (vedolizumab)", level: "mild", washout: "Not defined \u2014 gut-selective" },
+    natalizumab: { label: "Anti-integrin \u2014 systemic (natalizumab)", level: "moderate", washout: "3 months" },
+    belimumab: { label: "Anti-BAFF (belimumab)", level: "moderate", washout: "3 months" },
+    omalizumab: { label: "Anti-IgE (omalizumab)", level: "mild", washout: "Not applicable" },
+    eculizumab: { label: "Anti-complement (eculizumab, ravulizumab)", level: "moderate", washout: "Specialist input recommended", notes: "Increased risk of encapsulated organisms \u2014 ensure meningococcal vaccination" },
+  }},
+  smallMolecule: { label: "Small Molecule Targeted Therapies", therapies: {
+    jakInhibitor: { label: "JAK inhibitor (tofacitinib, baricitinib, upadacitinib, filgotinib)", level: "moderate", washout: "1\u20132 weeks (short half-life)" },
+    s1pModulator: { label: "S1P receptor modulator (fingolimod, siponimod, ozanimod, ponesimod)", level: "moderate", washout: "1\u20132 months (lymphocyte recovery dependent)" },
+    btkInhibitor: { label: "BTK inhibitor (ibrutinib, zanubrutinib, acalabrutinib)", level: "moderate", washout: "Specialist input recommended" },
+    bcl2Inhibitor: { label: "BCL-2 inhibitor (venetoclax)", level: "moderate", washout: "Specialist input recommended" },
+    mtorInhibitor: { label: "mTOR inhibitor (sirolimus, everolimus)", level: "moderate", washout: "Specialist input recommended" },
+    calcineurin: { label: "Calcineurin inhibitor (ciclosporin, tacrolimus)", level: "moderate", washout: "Specialist input recommended" },
+  }},
+  conventional: { label: "Conventional Immunosuppressives", therapies: {
+    mtxLow: { label: "Methotrexate \u226420 mg/week", level: "mild", washout: "1\u20133 months" },
+    mtxHigh: { label: "Methotrexate >20 mg/week", level: "moderate", washout: "3 months" },
+    azaLow: { label: "Azathioprine \u22643 mg/kg/day", level: "mild", washout: "3 months" },
+    azaHigh: { label: "Azathioprine >3 mg/kg/day", level: "moderate", washout: "3 months" },
+    mercaptoLow: { label: "6-mercaptopurine \u22641.5 mg/kg/day", level: "mild", washout: "3 months" },
+    mercaptoHigh: { label: "6-mercaptopurine >1.5 mg/kg/day", level: "moderate", washout: "3 months" },
+    mmfLow: { label: "Mycophenolate \u22641 g/day", level: "mild", washout: "3 months" },
+    mmfHigh: { label: "Mycophenolate >1 g/day", level: "moderate", washout: "3 months" },
+    leflunomide: { label: "Leflunomide", level: "mild", washout: "Variable \u2014 long half-life, washout with cholestyramine if needed" },
+    cyclophosphamide: { label: "Cyclophosphamide", level: "severe", washout: "3 months minimum" },
+    hydroxychloroquine: { label: "Hydroxychloroquine", level: "none", washout: "Not applicable \u2014 not immunosuppressive" },
+    sulfasalazine: { label: "Sulfasalazine", level: "none", washout: "Not applicable \u2014 not immunosuppressive" },
+  }},
+  corticosteroids: { label: "Corticosteroids", therapies: {
+    predLow: { label: "Prednisolone <10 mg/day (any duration)", level: "mild", washout: "1 month" },
+    predMod: { label: "Prednisolone 10\u201320 mg/day for >4 weeks", level: "moderate", washout: "1\u20133 months" },
+    predHigh: { label: "Prednisolone \u226520 mg/day for >10 days", level: "moderate", washout: "1 month after cessation" },
+    predPulse: { label: "Pulse IV methylprednisolone (\u2265500 mg)", level: "severe", washout: "1\u20133 months" },
+    topicalInhaled: { label: "Topical / inhaled / intra-articular only", level: "none", washout: "Not applicable" },
+  }},
+  conditions: { label: "Underlying Conditions (independent of therapy)", therapies: {
+    haemMalignActive: { label: "Haematological malignancy \u2014 active/on treatment", level: "severe", washout: "Specialist input \u2014 timing depends on treatment phase" },
+    haemMalignRemission: { label: "Haematological malignancy \u2014 in remission, off treatment >3 months", level: "mild", washout: "N/A" },
+    hivMild: { label: "HIV \u2014 CD4 \u2265200 and VL suppressed", level: "mild", washout: "N/A" },
+    hivModerate: { label: "HIV \u2014 CD4 100\u2013199", level: "moderate", washout: "N/A" },
+    hivSevere: { label: "HIV \u2014 CD4 <100 or advanced/untreated", level: "severe", washout: "N/A" },
+    sot: { label: "Solid organ transplant recipient", level: "severe", washout: "Generally lifelong immunosuppression" },
+    hsct: { label: "Haematopoietic stem cell transplant", level: "severe", washout: "Specialist-directed revaccination schedule", notes: "Requires complete revaccination \u2014 refer to HSCT-specific protocol" },
+    asplenia: { label: "Asplenia / hyposplenia (surgical or functional)", level: "mild", washout: "N/A", notes: "Specific risk for encapsulated organisms \u2014 requires pneumococcal, meningococcal, Hib" },
+    complementDeficiency: { label: "Complement deficiency", level: "mild", washout: "N/A", notes: "Meningococcal vaccination critical" },
+  }}
+};
+
+const LEVEL_ORDER = { none: 0, mild: 1, moderate: 2, severe: 3 };
+const LEVEL_LABELS = { none: "Not immunocompromised", mild: "Mild", moderate: "Moderate", severe: "Severe" };
+const LEVEL_COLORS = { none: "#64748b", mild: "#2563eb", moderate: "#d97706", severe: "#dc2626" };
+const LEVEL_BG = { none: "#f1f5f9", mild: "linear-gradient(135deg,#eff6ff,#dbeafe)", moderate: "linear-gradient(135deg,#fffbeb,#fef3c7)", severe: "linear-gradient(135deg,#fef2f2,#fee2e2)" };
+const LEVEL_BORDER = { none: "#e2e8f0", mild: "#bfdbfe", moderate: "#fde68a", severe: "#fecaca" };
+
+const KNOWN_VACCINES = [
+  { id: "influenza", label: "Influenza (this season)", group: "Non-live" },
+  { id: "shingrix1", label: "Shingrix \u2014 dose 1 only", group: "Non-live" },
+  { id: "shingrix2", label: "Shingrix \u2014 course complete", group: "Non-live" },
+  { id: "pcv13", label: "13vPCV (Prevenar 13)", group: "Non-live" },
+  { id: "pcv20", label: "20vPCV (Prevenar 20)", group: "Non-live" },
+  { id: "ppv23_1", label: "23vPPV \u2014 dose 1", group: "Non-live" },
+  { id: "ppv23_2", label: "23vPPV \u2014 dose 2", group: "Non-live" },
+  { id: "hepB_complete", label: "Hep B complete (anti-HBs \u226510)", group: "Non-live" },
+  { id: "hepB_nonresponder", label: "Hep B \u2014 non-responder (anti-HBs <10)", group: "Non-live" },
+  { id: "dtpa", label: "dTpa within last 10 years", group: "Non-live" },
+  { id: "covid_uptodate", label: "COVID-19 up to date (current ATAGI)", group: "Non-live" },
+  { id: "menACWY", label: "Meningococcal ACWY", group: "Non-live" },
+  { id: "menB", label: "Meningococcal B", group: "Non-live" },
+  { id: "hib", label: "Hib", group: "Non-live" },
+  { id: "hpv_complete", label: "HPV course complete", group: "Non-live" },
+  { id: "mmr2", label: "MMR \u00d72 or serologically immune", group: "Live" },
+  { id: "varicella2", label: "Varicella immune (vaccine/serology/prior infection)", group: "Live" },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+const state = {
+  therapies: [],
+  known: [],
+  age: 40,
+  atsi: false,
+  timing: "on_treatment",
+  expCat: {},
+  showKV: false,
+};
+
+function tog(arr, id) { return arr.includes(id) ? arr.filter(x => x !== id) : [...arr, id]; }
+
+function resetAll() {
+  state.therapies = []; state.known = []; state.age = 40; state.atsi = false;
+  state.timing = "on_treatment"; state.expCat = {}; state.showKV = false;
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// VACCINE LOGIC
+// ═══════════════════════════════════════════════════════════════════════════════
+function calcLevel() {
+  const d = [];
+  let mx = "none";
+  for (const cat of Object.values(THERAPY_CATEGORIES))
+    for (const [k, th] of Object.entries(cat.therapies))
+      if (state.therapies.includes(k)) { d.push({ ...th, id: k }); if (LEVEL_ORDER[th.level] > LEVEL_ORDER[mx]) mx = th.level; }
+  const isC = d.filter(x => LEVEL_ORDER[x.level] >= 1).length;
+  const modC = d.filter(x => x.level === "moderate").length;
+  let esc = mx, combo = null;
+  if (isC >= 2 && mx !== "severe") {
+    if (modC >= 2) { esc = "severe"; combo = "Multiple moderate-risk agents \u2014 consider managing as SEVERE."; }
+    else { if (mx === "mild") esc = "moderate"; if (mx === "moderate") esc = "severe"; combo = `${isC} immunosuppressive agents \u2014 escalated to ${LEVEL_LABELS[esc]}.`; }
+  }
+  return { level: esc, indiv: d.map(x => ({ name: x.label, level: x.level })), combo, details: d };
+}
+
+function getVaccines(level, age, atsi, therapies, known) {
+  const has = t => therapies.includes(t);
+  const kn = v => known.includes(v);
+  const needsE = has("asplenia") || has("complementDeficiency") || has("eculizumab");
+  const hasHIV = therapies.some(t => t.startsWith("hiv"));
+  const hasHSCT = has("hsct"); const hasSOT = has("sot"); const hasHM = has("haemMalignActive");
+  const modSev = LEVEL_ORDER[level] >= 2;
+  const V = [];
+
+  V.push({ name: "Influenza (IIV)", type: "Non-live", schedule: "Annual \u2014 IIV only", ci: false, nip: true, nipNote: "Funded for IC conditions", notes: modSev ? "LAIV contraindicated." : "Prefer IIV.", priority: "essential", status: kn("influenza") ? "done" : "due", statusNote: kn("influenza") ? "Received this season" : "Due \u2014 annual" });
+
+  const sNIP = modSev || hasHIV || hasHM || hasSOT || hasHSCT;
+  const s2 = kn("shingrix2"), s1 = kn("shingrix1");
+  V.push({ name: "Shingrix", type: "Non-live", schedule: modSev ? "2 doses, 1\u20132mo apart" : "2 doses, 2\u20136mo apart", ci: false, nip: sNIP, nipNote: sNIP ? "NIP-funded moderate/severe IC \u226518yo" : "Private script for mild IC", notes: "Non-live recombinant adjuvanted. Safe on IS.", priority: modSev ? "essential" : "recommended", status: s2 ? "done" : s1 ? "partial" : "due", statusNote: s2 ? "Course complete" : s1 ? "Dose 1 done \u2014 dose 2 due" : "Not started" });
+
+  const pNIP = modSev || needsE || hasHIV || hasSOT || hasHSCT || hasHM;
+  const hasPCV = kn("pcv13") || kn("pcv20"), hasPPV1 = kn("ppv23_1"), hasPPV2 = kn("ppv23_2");
+  let pSt = "due", pN = "Initiate with 13vPCV";
+  if (hasPPV2) { pSt = "done"; pN = "Schedule complete"; }
+  else if (hasPPV1 && hasPCV) { pSt = "partial"; pN = "PCV + 1st PPV done \u2014 2nd PPV due \u22655yr after 1st"; }
+  else if (hasPCV) { pSt = "partial"; pN = "PCV done \u2014 PPV due 12mo later (2\u201312mo ok)"; }
+  else if (hasPPV1) { pSt = "partial"; pN = "PPV given first \u2014 give PCV \u226512mo after PPV, then 2nd PPV \u22655yr after 1st"; }
+  V.push({ name: "Pneumococcal (PCV\u2192PPV)", type: "Non-live", schedule: "13vPCV \u2192 23vPPV at 12mo \u2192 2nd PPV \u22655yr", ci: false, nip: pNIP, nipNote: pNIP ? "NIP-funded for IC conditions" : "Private script", notes: needsE ? "HIGH PRIORITY \u2014 encapsulated organism risk" : "Check prior hx on AIR", priority: "essential", status: pSt, statusNote: pN });
+
+  const hbD = kn("hepB_complete"), hbNR = kn("hepB_nonresponder");
+  V.push({ name: "Hepatitis B", type: "Non-live", schedule: "3-dose (0, 2, 6mo). Double-dose if NR.", ci: false, nip: false, nipNote: "State funding for some risk groups (ATSI, contacts, PWID)", notes: "Screen HBsAg, anti-HBc, anti-HBs. If HBsAg+ \u2192 antiviral Mx.", priority: "essential", status: hbD ? "done" : hbNR ? "action" : "due", statusNote: hbD ? "Immune (anti-HBs \u226510)" : hbNR ? "Non-responder \u2014 revaccinate (double-dose/4-dose)" : "Check serology" });
+
+  V.push({ name: "dTpa", type: "Non-live", schedule: "10-yearly booster", ci: false, nip: false, nipNote: "NIP in pregnancy (20\u201332wk) only", notes: "No IC modification", priority: "routine", status: kn("dtpa") ? "done" : "due", statusNote: kn("dtpa") ? "Within last 10yr" : "Check last dose" });
+
+  V.push({ name: "COVID-19", type: "Non-live", schedule: "Per ATAGI seasonal advice", ci: false, nip: true, nipNote: "Per seasonal ATAGI guidance", notes: modSev ? "Reduced immunogenicity \u2014 may need extra doses" : "Standard dosing", priority: "recommended", status: kn("covid_uptodate") ? "done" : "due", statusNote: kn("covid_uptodate") ? "Up to date" : "Check current ATAGI advice" });
+
+  const mNIP = needsE || hasHSCT || hasHIV;
+  const mA = kn("menACWY"), mB = kn("menB");
+  let mSt = "due", mN = "";
+  if (mNIP || needsE) {
+    if (mA && mB) { mSt = "done"; mN = "Both done \u2014 check booster schedule"; }
+    else if (mA || mB) { mSt = "partial"; mN = `${mA ? "ACWY" : "B"} done \u2014 ${mA ? "B" : "ACWY"} due`; }
+    else { mSt = "due"; mN = "Both ACWY + B required"; }
+  } else { mSt = mA && mB ? "done" : "consider"; mN = "Not routinely indicated"; }
+  V.push({ name: "Meningococcal ACWY + B", type: "Non-live", schedule: needsE ? "ACWY: 2 doses 8wk + 5yr boosters. B: 2 doses \u22652mo + boosters" : "Per risk \u2014 Handbook", ci: false, nip: mNIP, nipNote: mNIP ? "NIP-funded asplenia/complement/HSCT" : "Not NIP-funded", notes: has("eculizumab") ? "CRITICAL \u2014 vaccinate \u22652wk pre-therapy. Abx prophylaxis." : (needsE ? "HIGH PRIORITY" : ""), priority: needsE ? "essential" : (mNIP ? "recommended" : "consider"), status: mSt, statusNote: mN });
+
+  if (needsE || hasHSCT) {
+    V.push({ name: "Hib", type: "Non-live", schedule: hasHSCT ? "3 doses post-transplant" : "Single dose if incomplete", ci: false, nip: has("asplenia") || hasHSCT, nipNote: (has("asplenia") || hasHSCT) ? "NIP-funded" : "Not funded", notes: "For asplenia/HSCT", priority: "essential", status: kn("hib") ? "done" : "due", statusNote: kn("hib") ? "Received" : "Due" });
+  }
+
+  V.push({ name: "HPV (Gardasil 9)", type: "Non-live", schedule: "3 doses (0, 2, 6mo)", ci: false, nip: age <= 25, nipNote: age <= 25 ? "NIP catch-up to 25yo" : "Private >25yo", notes: "3-dose for IC patients", priority: "recommended", status: kn("hpv_complete") ? "done" : "due", statusNote: kn("hpv_complete") ? "Course complete" : "Check AIR" });
+
+  const mmrOk = kn("mmr2");
+  V.push({ name: "MMR", type: "LIVE", schedule: modSev ? "CONTRAINDICATED on therapy" : "2 doses if non-immune", ci: modSev && !mmrOk, nip: false, nipNote: "Some state catch-up funding", notes: modSev ? (mmrOk ? "Immune \u2014 no action" : "Check measles/rubella serology \u2192 cocoon if non-immune \u2192 vaccinate post-washout") : "Can give in mild IC \u2014 specialist assessment", priority: mmrOk ? "done_live" : (modSev ? "check_serology" : "recommended"), status: mmrOk ? "done" : (modSev ? "contraindicated" : "due"), statusNote: mmrOk ? "Immune" : (modSev ? "CI \u2014 check serology, cocoon contacts" : "Check serology, give if non-immune") });
+
+  const vzOk = kn("varicella2");
+  V.push({ name: "Varicella", type: "LIVE", schedule: modSev ? "CONTRAINDICATED on therapy" : "2 doses if non-immune", ci: modSev && !vzOk, nip: false, nipNote: "Not NIP-funded for adults", notes: modSev ? (vzOk ? "Immune \u2014 no action" : "Check VZV IgG \u2192 cocoon \u2192 vaccinate post-washout") : "Can give in mild IC \u2014 specialist assessment", priority: vzOk ? "done_live" : (modSev ? "check_serology" : "recommended"), status: vzOk ? "done" : (modSev ? "contraindicated" : "due"), statusNote: vzOk ? "Immune" : (modSev ? "CI \u2014 check VZV IgG, cocoon contacts" : "Check VZV IgG, give if non-immune") });
+
+  return V;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PRINT
+// ═══════════════════════════════════════════════════════════════════════════════
+function handlePrint(vaccines, details, level, combo) {
+  const pw = window.open('', '_blank');
+  const today = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+  const row = v => `<tr style="background:${v.status==='contraindicated'?'#fef2f2':v.status==='done'?'#f0fdf4':'transparent'}">
+    <td style="padding:4px 6px;border:1px solid #d1d5db;font-weight:600">${v.name}${v.ci?` <span style="color:#dc2626">\u2715</span>`:''}</td>
+    <td style="padding:4px 6px;border:1px solid #d1d5db;color:${v.type==='LIVE'?'#dc2626':'#16a34a'};font-weight:700;font-size:10px">${v.type}</td>
+    <td style="padding:4px 6px;border:1px solid #d1d5db;font-weight:600;color:${v.status==='done'?'#16a34a':v.status==='contraindicated'?'#dc2626':v.status==='partial'||v.status==='action'?'#d97706':'#1e40af'}">${v.statusNote}</td>
+    <td style="padding:4px 6px;border:1px solid #d1d5db">${v.schedule}</td>
+    <td style="padding:4px 6px;border:1px solid #d1d5db">${v.nip?'<b style="color:#16a34a">Yes</b>':'No'}${v.nipNote?'<br><span style="font-size:9px;color:#6b7280">'+v.nipNote+'</span>':''}</td>
+    <td style="padding:4px 6px;border:1px solid #d1d5db;font-size:10px">${v.notes}</td></tr>`;
+  const tbl = list => list.length===0?'':`<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px"><thead><tr style="background:#e2e8f0"><th style="padding:4px 6px;border:1px solid #d1d5db;text-align:left;font-size:10px">Vaccine</th><th style="padding:4px 6px;border:1px solid #d1d5db;text-align:left;font-size:10px;width:45px">Type</th><th style="padding:4px 6px;border:1px solid #d1d5db;text-align:left;font-size:10px">Status</th><th style="padding:4px 6px;border:1px solid #d1d5db;text-align:left;font-size:10px">Schedule</th><th style="padding:4px 6px;border:1px solid #d1d5db;text-align:left;font-size:10px;width:14%">NIP</th><th style="padding:4px 6px;border:1px solid #d1d5db;text-align:left;font-size:10px">Notes</th></tr></thead><tbody>${list.map(row).join('')}</tbody></table>`;
+  const noWO = ["N/A","Not applicable","Not applicable \u2014 not immunosuppressive"];
+  const wo = details.filter(d => d.washout && !noWO.includes(d.washout)).map(d => `<tr><td style="padding:3px 6px;border:1px solid #d1d5db">${d.label}</td><td style="padding:3px 6px;border:1px solid #d1d5db">${d.washout}</td></tr>`).join('');
+  const action = vaccines.filter(v => v.status !== "done" && v.status !== "consider");
+  const done = vaccines.filter(v => v.status === "done");
+  pw.document.write(`<!DOCTYPE html><html><head><title>Vaccination Plan</title></head><body style="font-family:'Segoe UI',system-ui,sans-serif;max-width:210mm;margin:0 auto;padding:10mm 14mm;font-size:11px;color:#1f2937">
+    <div style="display:flex;justify-content:space-between;border-bottom:3px solid #1e3a5f;padding-bottom:6px;margin-bottom:10px"><div><h1 style="margin:0;font-size:16px;color:#1e3a5f">Vaccination Recommendations \u2014 Immunocompromised Patient</h1><p style="margin:2px 0 0;font-size:10px;color:#6b7280">Clinical decision support \u2014 Australian Immunisation Handbook (ATAGI)</p></div><div style="text-align:right;font-size:9px;color:#6b7280">Generated: ${today}<br>Handbook: March 2026</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:2px">Patient</div>Age: <b>${state.age}</b> | ATSI: <b>${state.atsi?'Yes':'No'}</b> | <b>${state.timing==='pre_treatment'?'Pre-treatment':state.timing==='on_treatment'?'On treatment':'Recently ceased'}</b></div>
+    <div style="background:${level==='severe'?'#fef2f2':level==='moderate'?'#fffbeb':'#eff6ff'};border:1px solid ${LEVEL_BORDER[level]};border-radius:4px;padding:6px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:2px">Immunocompromise</div><div style="font-weight:700;color:${LEVEL_COLORS[level]};font-size:14px">${LEVEL_LABELS[level]}</div></div></div>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px;margin-bottom:8px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:3px">Therapies</div>${details.map(d=>`<div>\u2022 ${d.label} <span style="color:${LEVEL_COLORS[d.level]};font-weight:600;font-size:9px">[${LEVEL_LABELS[d.level]}]</span></div>`).join('')}</div>
+    ${combo?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:6px;margin-bottom:8px;font-size:10px;color:#991b1b"><b>\u26A0</b> ${combo}</div>`:''}
+    ${action.length>0?'<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1e40af;margin-bottom:4px">Action Required</div>'+tbl(action):''}
+    ${done.length>0?'<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#16a34a;margin-bottom:4px">Completed</div>'+tbl(done):''}
+    ${wo?`<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:3px">Washout Periods</div><table style="width:55%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#f3f4f6"><th style="padding:3px 6px;border:1px solid #d1d5db;text-align:left">Therapy</th><th style="padding:3px 6px;border:1px solid #d1d5db;text-align:left">Washout</th></tr></thead><tbody>${wo}</tbody></table>`:''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0"><div style="padding:6px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:10px"><b>Serology:</b> VZV IgG, measles IgG, rubella IgG, anti-HBs (\u00b1 HBsAg/anti-HBc). Pneumococcal hx on AIR.</div><div style="padding:6px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:10px"><b>Contacts:</b> MMR, varicella, annual influenza up to date. Live vaccines safe for contacts.</div></div>
+    <div style="border-top:1px solid #d1d5db;padding-top:6px;font-size:8px;color:#9ca3af"><b>Disclaimer:</b> Clinical decision support for specialist physicians. Australian Immunisation Handbook (ATAGI, March 2026). Does not replace clinical judgement. Verify NIP at vaccination. HSCT \u2192 specialist revaccination protocol.</div></body></html>`);
+  pw.document.close();
+  pw.print();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════════════════
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function dotClass(s) { return s==='done'?'dot-done':s==='partial'?'dot-partial':s==='contraindicated'||s==='action'?'dot-ci':s==='consider'?'dot-consider':'dot-due'; }
+
+function render() {
+  const { level, indiv, combo, details } = calcLevel();
+  const vaccines = state.therapies.length > 0 ? getVaccines(level, state.age, state.atsi, state.therapies, state.known) : [];
+  const action = vaccines.filter(v => v.status !== "done" && v.status !== "consider");
+  const done = vaccines.filter(v => v.status === "done");
+  const consider = vaccines.filter(v => v.status === "consider");
+  const cnt = state.therapies.length;
+  const kvCnt = state.known.length;
+  const noWO = ["N/A","Not applicable","Not applicable \u2014 not immunosuppressive"];
+  const washouts = details.filter(d => d.washout && !noWO.includes(d.washout));
+
+  let h = '';
+
+  // Header
+  h += `<div class="hdr"><div><h1>Australian IC Vaccination Calculator</h1><div class="hdr-sub">Australian Immunisation Handbook \u2014 ATAGI, March 2026</div></div><button class="btn-reset" onclick="resetAll()">\u27F3 Reset All</button></div>`;
+  h += `<div class="body-wrap">`;
+
+  // Demographics
+  h += `<div class="sec sec-line"><div class="sec-title">Patient</div><div class="row">`;
+  h += `<div><div class="lbl">Age</div><input type="number" id="age-input" value="${state.age}" min="18" max="110"></div>`;
+  h += `<div><div class="lbl">ATSI</div><div class="radio-group"><label><input type="radio" name="atsi" value="no" ${!state.atsi?'checked':''}> No</label><label><input type="radio" name="atsi" value="yes" ${state.atsi?'checked':''}> Yes</label></div></div>`;
+  h += `<div><div class="lbl">Timing</div><select id="timing-select"><option value="pre_treatment" ${state.timing==='pre_treatment'?'selected':''}>Pre-treatment</option><option value="on_treatment" ${state.timing==='on_treatment'?'selected':''}>On treatment</option><option value="recently_ceased" ${state.timing==='recently_ceased'?'selected':''}>Recently ceased</option></select></div>`;
+  h += `</div>`;
+  if (state.timing === "pre_treatment") h += `<div class="alert-pretreat"><b>Pre-treatment:</b> Live \u22654wk and non-live \u22652wk before IS.</div>`;
+  if (state.timing === "recently_ceased") h += `<div class="alert-ceased"><b>Post-cessation:</b> Live vaccines after washout \u2014 see intervals.</div>`;
+  h += `</div>`;
+
+  // Therapies
+  h += `<div class="sec sec-line"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div class="sec-title">Therapies & Conditions ${cnt>0?`<span class="cnt">${cnt}</span>`:''}</div>${cnt>0?'<button class="btn-clear" onclick="clearTherapies()">Clear therapies</button>':''}</div>`;
+  h += `<div class="th-list">`;
+  for (const [ck, cat] of Object.entries(THERAPY_CATEGORIES)) {
+    const catSel = Object.keys(cat.therapies).filter(t => state.therapies.includes(t));
+    h += `<div><div class="cat-hdr" onclick="toggleCat('${ck}')"><span class="cat-title">${state.expCat[ck]?'\u25BE':'\u25B8'} ${esc(cat.label)}${catSel.length>0?`<span class="cnt">${catSel.length}</span>`:''}</span></div>`;
+    if (state.expCat[ck]) {
+      h += `<div>`;
+      for (const [tk, th] of Object.entries(cat.therapies)) {
+        const sel = state.therapies.includes(tk);
+        h += `<div class="th-item${sel?' sel':''}" onclick="toggleTherapy('${tk}')"><input type="checkbox" ${sel?'checked':''} onclick="event.stopPropagation();toggleTherapy('${tk}')"><span class="th-label">${esc(th.label)}</span><span class="badge badge-${th.level}">${LEVEL_LABELS[th.level]}</span></div>`;
+      }
+      h += `</div>`;
+    }
+    h += `</div>`;
+  }
+  h += `</div></div>`;
+
+  // Known Vaccines
+  h += `<div class="sec sec-line"><div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleKVPanel()"><div class="sec-title">${state.showKV?'\u25BE':'\u25B8'} Known Vaccines / Immunity ${kvCnt>0?`<span class="cnt cnt-green">${kvCnt}</span>`:''}</div>${kvCnt>0?`<button class="btn-clear" onclick="event.stopPropagation();clearKnown()">Clear vaccines</button>`:''}</div>`;
+  if (state.showKV) {
+    h += `<div class="kv-grid">`;
+    for (const v of KNOWN_VACCINES) {
+      const sel = state.known.includes(v.id);
+      h += `<div class="kv-item${sel?' sel':''}" onclick="toggleKV('${v.id}')"><input type="checkbox" ${sel?'checked':''} onclick="event.stopPropagation();toggleKV('${v.id}')"><span>${esc(v.label)}</span>${v.group==='Live'?'<span class="kv-live">LIVE</span>':''}</div>`;
+    }
+    h += `</div>`;
+  } else if (kvCnt > 0) {
+    h += `<div class="kv-summary">${state.known.map(k => { const v = KNOWN_VACCINES.find(x=>x.id===k); return v ? esc(v.label) : ''; }).filter(Boolean).join(' \u00b7 ')}</div>`;
+  }
+  h += `</div>`;
+
+  // Results
+  if (cnt > 0) {
+    h += `<div class="sec">`;
+    // Level box
+    h += `<div class="level-box" style="background:${LEVEL_BG[level]};border-color:${LEVEL_BORDER[level]}"><div><div class="overall-label">Overall</div><div class="overall-value" style="color:${LEVEL_COLORS[level]}">${LEVEL_LABELS[level]}</div></div><div class="indiv">${indiv.map(il => `<div><span style="color:${LEVEL_COLORS[il.level]};font-weight:600">${LEVEL_LABELS[il.level]}</span> \u2014 ${esc(il.name.split(' (')[0])}</div>`).join('')}</div></div>`;
+    if (combo) h += `<div class="alert-box alert-combo"><b>\u26A0</b> ${esc(combo)}</div>`;
+    details.filter(d => d.notes).forEach(d => { h += `<div class="alert-note"><b>${esc(d.label.split(' (')[0])}:</b> ${esc(d.notes)}</div>`; });
+    if (state.timing === "recently_ceased" && washouts.length > 0) {
+      h += `<div class="washout-box"><div class="lbl" style="margin-bottom:3px">Washout Periods</div>`;
+      washouts.forEach(d => { h += `<div style="font-size:12px;padding:1px 0"><b>${esc(d.label.split(' (')[0])}:</b> ${esc(d.washout)}</div>`; });
+      h += `</div>`;
+    }
+
+    // Action table
+    if (action.length > 0) {
+      h += `<div class="section-label section-label-action">Action Required (${action.length})</div>`;
+      h += `<div style="overflow-x:auto;margin-bottom:8px"><table class="action-table"><thead><tr><th>Vaccine</th><th>Type</th><th>Status</th><th>Schedule</th><th>NIP</th><th>Notes</th></tr></thead><tbody>`;
+      action.forEach(v => {
+        h += `<tr class="${v.status==='contraindicated'||v.status==='action'?'row-ci':''}"><td class="v-name">${esc(v.name)}${v.ci?'<span class="ci-tag">\u2715 CONTRAINDICATED</span>':''}</td><td class="${v.type==='LIVE'?'type-live':'type-nonlive'}">${v.type}</td><td><span class="dot ${dotClass(v.status)}"></span><span class="v-status">${esc(v.statusNote)}</span></td><td class="v-schedule">${esc(v.schedule)}</td><td class="${v.nip?'nip-yes':'nip-no'}">${v.nip?'Yes':'No'}</td><td class="v-notes">${esc(v.notes)}</td></tr>`;
+      });
+      h += `</tbody></table></div>`;
+    }
+
+    // Done
+    if (done.length > 0) {
+      h += `<div class="section-label section-label-done">Completed (${done.length})</div>`;
+      h += `<div style="margin-bottom:8px"><table class="done-table"><tbody>`;
+      done.forEach(v => { h += `<tr><td class="v-name">${esc(v.name)}</td><td class="${v.type==='LIVE'?'type-live':'type-nonlive'}">${v.type}</td><td><span class="dot dot-done"></span>${esc(v.statusNote)}</td></tr>`; });
+      h += `</tbody></table></div>`;
+    }
+
+    // Consider
+    if (consider.length > 0) {
+      h += `<div class="section-label section-label-consider">Consider (${consider.length})</div>`;
+      h += `<div style="margin-bottom:8px"><table class="consider-table"><tbody>`;
+      consider.forEach(v => { h += `<tr><td class="v-name">${esc(v.name)}</td><td style="font-size:10px;color:#64748b">${esc(v.statusNote)}</td></tr>`; });
+      h += `</tbody></table></div>`;
+    }
+
+    // Info
+    h += `<div class="info-grid"><div class="info-sero"><b style="color:#166534">Serology:</b> VZV IgG, measles IgG, rubella IgG, anti-HBs (\u00b1 HBsAg/anti-HBc). Pneumococcal hx on AIR.</div><div class="info-contacts"><b style="color:#1e40af">Contacts:</b> MMR, varicella, annual influenza up to date. Live vaccines safe for contacts.</div></div>`;
+
+    // Buttons
+    h += `<div class="btn-row"><button class="btn-print" onclick="doPrint()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print Plan</button><button class="btn-reset" onclick="resetAll()">\u27F3 Reset All</button></div>`;
+    h += `<div class="disclaimer"><b>Disclaimer:</b> Clinical decision support for specialist physicians. Australian Immunisation Handbook (ATAGI, March 2026). Does not replace clinical judgement. Verify NIP at vaccination. HSCT \u2192 specialist revaccination.</div>`;
+    h += `</div>`;
+  } else {
+    h += `<div class="empty"><div class="empty-icon">\uD83D\uDC89</div><div class="empty-text">Select therapies or conditions above</div><div class="empty-sub">Recommendations generated based on immunocompromise level</div></div>`;
+  }
+
+  h += `</div>`; // body-wrap
+  document.getElementById('app').innerHTML = h;
+
+  // Bind events
+  const ageInput = document.getElementById('age-input');
+  if (ageInput) ageInput.addEventListener('change', e => { state.age = parseInt(e.target.value) || 18; render(); });
+  document.querySelectorAll('input[name="atsi"]').forEach(r => r.addEventListener('change', e => { state.atsi = e.target.value === 'yes'; render(); }));
+  const timingSel = document.getElementById('timing-select');
+  if (timingSel) timingSel.addEventListener('change', e => { state.timing = e.target.value; render(); });
+}
+
+// Global handlers
+window.toggleTherapy = function(id) { state.therapies = tog(state.therapies, id); render(); };
+window.toggleKV = function(id) { state.known = tog(state.known, id); render(); };
+window.toggleCat = function(c) { state.expCat[c] = !state.expCat[c]; render(); };
+window.toggleKVPanel = function() { state.showKV = !state.showKV; render(); };
+window.clearTherapies = function() { state.therapies = []; render(); };
+window.clearKnown = function() { state.known = []; render(); };
+window.doPrint = function() {
+  const { level, combo, details } = calcLevel();
+  const vaccines = getVaccines(level, state.age, state.atsi, state.therapies, state.known);
+  handlePrint(vaccines, details, level, combo);
+};
+
+// Initial render
+render();
+</script>
+</body>
+</html>

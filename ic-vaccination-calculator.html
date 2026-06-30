@@ -111,61 +111,61 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 const THERAPY_CATEGORIES = {
   biologics: { label: "Biological Therapies", therapies: {
-    antiTNF_monoclonal: { label: "Anti-TNF monoclonal (adalimumab, infliximab, golimumab, certolizumab)", level: "moderate", washout: "3 months" },
-    etanercept: { label: "Soluble TNF receptor (etanercept)", level: "moderate", washout: "1 month" },
-    rituximab: { label: "Anti-CD20 (rituximab, ocrelizumab, ofatumumab)", level: "severe", washout: "6\u201312 months (B-cell recovery dependent)" },
-    alemtuzumab: { label: "Anti-CD52 (alemtuzumab)", level: "severe", washout: "12 months" },
-    antiIL6: { label: "Anti-IL-6R (tocilizumab, sarilumab)", level: "moderate", washout: "3 months" },
-    antiIL17: { label: "Anti-IL-17 (secukinumab, ixekizumab, bimekizumab)", level: "mild", washout: "3 months" },
-    antiIL12_23: { label: "Anti-IL-12/23 (ustekinumab)", level: "mild", washout: "3 months" },
-    antiIL23: { label: "Anti-IL-23 (guselkumab, risankizumab, tildrakizumab)", level: "mild", washout: "3 months" },
-    antiIL4_13: { label: "Anti-IL-4/13 (dupilumab)", level: "mild", washout: "Not defined \u2014 likely minimal" },
-    abatacept: { label: "CTLA4-Ig (abatacept)", level: "moderate", washout: "3 months" },
-    vedolizumab: { label: "Anti-integrin \u2014 gut-selective (vedolizumab)", level: "mild", washout: "Not defined \u2014 gut-selective" },
-    natalizumab: { label: "Anti-integrin \u2014 systemic (natalizumab)", level: "moderate", washout: "3 months" },
-    belimumab: { label: "Anti-BAFF (belimumab)", level: "moderate", washout: "3 months" },
-    omalizumab: { label: "Anti-IgE (omalizumab)", level: "mild", washout: "Not applicable" },
-    eculizumab: { label: "Anti-complement (eculizumab, ravulizumab)", level: "moderate", washout: "Specialist input recommended", notes: "Increased risk of encapsulated organisms \u2014 ensure meningococcal vaccination" },
+    antiTNF_monoclonal: { label: "Anti-TNF monoclonal (adalimumab, infliximab, golimumab, certolizumab)", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: false },
+    etanercept: { label: "Soluble TNF receptor (etanercept)", level: "moderate", washout: "1 month", zosterFunded: true, covidSevere: false },
+    rituximab: { label: "Anti-CD20 (rituximab, ocrelizumab, ofatumumab)", level: "severe", washout: "6\u201312 months (B-cell recovery dependent)", zosterFunded: true, covidSevere: true },
+    alemtuzumab: { label: "Anti-CD52 (alemtuzumab)", level: "severe", washout: "12 months", zosterFunded: true, covidSevere: true },
+    antiIL6: { label: "Anti-IL-6R (tocilizumab, sarilumab)", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: false },
+    antiIL17: { label: "Anti-IL-17 (secukinumab, ixekizumab, bimekizumab)", level: "mild", washout: "3 months", zosterFunded: false, covidSevere: false },
+    antiIL12_23: { label: "Anti-IL-12/23 (ustekinumab)", level: "mild", washout: "3 months", zosterFunded: false, covidSevere: false },
+    antiIL23: { label: "Anti-IL-23 (guselkumab, risankizumab, tildrakizumab)", level: "mild", washout: "3 months", zosterFunded: false, covidSevere: false },
+    antiIL4_13: { label: "Anti-IL-4/13 (dupilumab)", level: "mild", washout: "Not defined \u2014 likely minimal", zosterFunded: true, covidSevere: false },
+    abatacept: { label: "CTLA4-Ig (abatacept)", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: false },
+    vedolizumab: { label: "Anti-integrin \u2014 gut-selective (vedolizumab)", level: "mild", washout: "Not defined \u2014 gut-selective", zosterFunded: false, covidSevere: false },
+    natalizumab: { label: "Anti-integrin \u2014 systemic (natalizumab)", level: "moderate", washout: "3 months", zosterFunded: false, covidSevere: false },
+    belimumab: { label: "Anti-BAFF (belimumab)", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: false },
+    omalizumab: { label: "Anti-IgE (omalizumab)", level: "mild", washout: "Not applicable", zosterFunded: false, covidSevere: false },
+    eculizumab: { label: "Anti-complement (eculizumab, ravulizumab)", level: "moderate", washout: "Specialist input recommended", notes: "Increased risk of encapsulated organisms \u2014 ensure meningococcal vaccination", zosterFunded: false, covidSevere: false },
   }},
   smallMolecule: { label: "Small Molecule Targeted Therapies", therapies: {
-    jakInhibitor: { label: "JAK inhibitor (tofacitinib, baricitinib, upadacitinib, filgotinib)", level: "moderate", washout: "1\u20132 weeks (short half-life)" },
-    s1pModulator: { label: "S1P receptor modulator (fingolimod, siponimod, ozanimod, ponesimod)", level: "moderate", washout: "1\u20132 months (lymphocyte recovery dependent)" },
-    btkInhibitor: { label: "BTK inhibitor (ibrutinib, zanubrutinib, acalabrutinib)", level: "moderate", washout: "Specialist input recommended" },
-    bcl2Inhibitor: { label: "BCL-2 inhibitor (venetoclax)", level: "moderate", washout: "Specialist input recommended" },
-    mtorInhibitor: { label: "mTOR inhibitor (sirolimus, everolimus)", level: "moderate", washout: "Specialist input recommended" },
-    calcineurin: { label: "Calcineurin inhibitor (ciclosporin, tacrolimus)", level: "moderate", washout: "Specialist input recommended" },
+    jakInhibitor: { label: "JAK inhibitor (tofacitinib, baricitinib, upadacitinib, filgotinib)", level: "moderate", washout: "1\u20132 weeks (short half-life)", zosterFunded: true, covidSevere: false },
+    s1pModulator: { label: "S1P receptor modulator (fingolimod, siponimod, ozanimod, ponesimod)", level: "moderate", washout: "1\u20132 months (lymphocyte recovery dependent)", zosterFunded: true, covidSevere: false },
+    btkInhibitor: { label: "BTK inhibitor (ibrutinib, zanubrutinib, acalabrutinib)", level: "moderate", washout: "Specialist input recommended", zosterFunded: true, covidSevere: false },
+    bcl2Inhibitor: { label: "BCL-2 inhibitor (venetoclax)", level: "moderate", washout: "Specialist input recommended", zosterFunded: false, covidSevere: false },
+    mtorInhibitor: { label: "mTOR inhibitor (sirolimus, everolimus)", level: "moderate", washout: "Specialist input recommended", zosterFunded: true, covidSevere: true },
+    calcineurin: { label: "Calcineurin inhibitor (ciclosporin, tacrolimus)", level: "moderate", washout: "Specialist input recommended", zosterFunded: true, covidSevere: true },
   }},
   conventional: { label: "Conventional Immunosuppressives", therapies: {
-    mtxLow: { label: "Methotrexate \u226420 mg/week", level: "mild", washout: "1\u20133 months" },
-    mtxHigh: { label: "Methotrexate >20 mg/week", level: "moderate", washout: "3 months" },
-    azaLow: { label: "Azathioprine \u22643 mg/kg/day", level: "mild", washout: "3 months" },
-    azaHigh: { label: "Azathioprine >3 mg/kg/day", level: "moderate", washout: "3 months" },
-    mercaptoLow: { label: "6-mercaptopurine \u22641.5 mg/kg/day", level: "mild", washout: "3 months" },
-    mercaptoHigh: { label: "6-mercaptopurine >1.5 mg/kg/day", level: "moderate", washout: "3 months" },
-    mmfLow: { label: "Mycophenolate \u22641 g/day", level: "mild", washout: "3 months" },
-    mmfHigh: { label: "Mycophenolate >1 g/day", level: "moderate", washout: "3 months" },
-    leflunomide: { label: "Leflunomide", level: "mild", washout: "Variable \u2014 long half-life, washout with cholestyramine if needed" },
-    cyclophosphamide: { label: "Cyclophosphamide", level: "severe", washout: "3 months minimum" },
-    hydroxychloroquine: { label: "Hydroxychloroquine", level: "none", washout: "Not applicable \u2014 not immunosuppressive" },
-    sulfasalazine: { label: "Sulfasalazine", level: "none", washout: "Not applicable \u2014 not immunosuppressive" },
+    mtxLow: { label: "Methotrexate \u226420 mg/week", level: "mild", washout: "1\u20133 months", zosterFunded: false, covidSevere: false },
+    mtxHigh: { label: "Methotrexate >20 mg/week", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: false, covidNote: "COVID severe threshold is >25 mg/week \u2014 confirm dose" },
+    azaLow: { label: "Azathioprine \u22643 mg/kg/day", level: "mild", washout: "3 months", zosterFunded: false, covidSevere: false },
+    azaHigh: { label: "Azathioprine >3 mg/kg/day", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: true },
+    mercaptoLow: { label: "6-mercaptopurine \u22641.5 mg/kg/day", level: "mild", washout: "3 months", zosterFunded: false, covidSevere: false },
+    mercaptoHigh: { label: "6-mercaptopurine >1.5 mg/kg/day", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: true },
+    mmfLow: { label: "Mycophenolate \u22641 g/day", level: "mild", washout: "3 months", zosterFunded: false, covidSevere: true },
+    mmfHigh: { label: "Mycophenolate >1 g/day", level: "moderate", washout: "3 months", zosterFunded: true, covidSevere: true },
+    leflunomide: { label: "Leflunomide", level: "mild", washout: "Variable \u2014 long half-life, washout with cholestyramine if needed", zosterFunded: false, covidSevere: false },
+    cyclophosphamide: { label: "Cyclophosphamide", level: "severe", washout: "3 months minimum", zosterFunded: true, covidSevere: true },
+    hydroxychloroquine: { label: "Hydroxychloroquine", level: "none", washout: "Not applicable \u2014 not immunosuppressive", zosterFunded: false, covidSevere: false },
+    sulfasalazine: { label: "Sulfasalazine", level: "none", washout: "Not applicable \u2014 not immunosuppressive", zosterFunded: false, covidSevere: false },
   }},
   corticosteroids: { label: "Corticosteroids", therapies: {
-    predLow: { label: "Prednisolone <10 mg/day (any duration)", level: "mild", washout: "1 month" },
-    predMod: { label: "Prednisolone 10\u201320 mg/day for >4 weeks", level: "moderate", washout: "1\u20133 months" },
-    predHigh: { label: "Prednisolone \u226520 mg/day for >10 days", level: "moderate", washout: "1 month after cessation" },
-    predPulse: { label: "Pulse IV methylprednisolone (\u2265500 mg)", level: "severe", washout: "1\u20133 months" },
-    topicalInhaled: { label: "Topical / inhaled / intra-articular only", level: "none", washout: "Not applicable" },
+    predLow: { label: "Prednisolone <10 mg/day (any duration)", level: "mild", washout: "1 month", zosterFunded: false, covidSevere: false },
+    predMod: { label: "Prednisolone 10\u201320 mg/day for >4 weeks", level: "moderate", washout: "1\u20133 months", zosterFunded: false, covidSevere: false },
+    predHigh: { label: "Prednisolone \u226520 mg/day for >10 days", level: "moderate", washout: "1 month after cessation", zosterFunded: false, covidSevere: true, covidNote: "COVID severe = \u226520 mg/day for \u226514 days in a month \u2014 confirm duration" },
+    predPulse: { label: "Pulse IV methylprednisolone (\u2265500 mg)", level: "severe", washout: "1\u20133 months", zosterFunded: false, covidSevere: true },
+    topicalInhaled: { label: "Topical / inhaled / intra-articular only", level: "none", washout: "Not applicable", zosterFunded: false, covidSevere: false },
   }},
   conditions: { label: "Underlying Conditions (independent of therapy)", therapies: {
-    haemMalignActive: { label: "Haematological malignancy \u2014 active/on treatment", level: "severe", washout: "Specialist input \u2014 timing depends on treatment phase" },
-    haemMalignRemission: { label: "Haematological malignancy \u2014 in remission, off treatment >3 months", level: "mild", washout: "N/A" },
-    hivMild: { label: "HIV \u2014 CD4 \u2265200 and VL suppressed", level: "mild", washout: "N/A" },
-    hivModerate: { label: "HIV \u2014 CD4 100\u2013199", level: "moderate", washout: "N/A" },
-    hivSevere: { label: "HIV \u2014 CD4 <100 or advanced/untreated", level: "severe", washout: "N/A" },
-    sot: { label: "Solid organ transplant recipient", level: "severe", washout: "Generally lifelong immunosuppression" },
-    hsct: { label: "Haematopoietic stem cell transplant", level: "severe", washout: "Specialist-directed revaccination schedule", notes: "Requires complete revaccination \u2014 refer to HSCT-specific protocol" },
-    asplenia: { label: "Asplenia / hyposplenia (surgical or functional)", level: "mild", washout: "N/A", notes: "Specific risk for encapsulated organisms \u2014 requires pneumococcal, meningococcal, Hib" },
-    complementDeficiency: { label: "Complement deficiency", level: "mild", washout: "N/A", notes: "Meningococcal vaccination critical" },
+    haemMalignActive: { label: "Haematological malignancy \u2014 active/on treatment", level: "severe", washout: "Specialist input \u2014 timing depends on treatment phase", pneumoFunded: true, zosterFunded: true, covidSevere: true },
+    haemMalignRemission: { label: "Haematological malignancy \u2014 in remission, off treatment >3 months", level: "mild", washout: "N/A", pneumoFunded: true, zosterFunded: false, covidSevere: false, pneumoNote: "Pneumococcal NIP funding read from diagnosis (haematological malignancy); confirm eligibility at vaccination" },
+    hivMild: { label: "HIV \u2014 CD4 \u2265200 and VL suppressed", level: "mild", washout: "N/A", pneumoFunded: true, zosterFunded: false, covidSevere: false },
+    hivModerate: { label: "HIV \u2014 CD4 100\u2013199", level: "moderate", washout: "N/A", pneumoFunded: true, zosterFunded: true, covidSevere: true },
+    hivSevere: { label: "HIV \u2014 CD4 <100 or advanced/untreated", level: "severe", washout: "N/A", pneumoFunded: true, zosterFunded: true, covidSevere: true },
+    sot: { label: "Solid organ transplant recipient", level: "severe", washout: "Generally lifelong immunosuppression", pneumoFunded: true, zosterFunded: true, covidSevere: true },
+    hsct: { label: "Haematopoietic stem cell transplant", level: "severe", washout: "Specialist-directed revaccination schedule", notes: "Requires complete revaccination \u2014 refer to HSCT-specific protocol", pneumoFunded: true, zosterFunded: true, covidSevere: true },
+    asplenia: { label: "Asplenia / hyposplenia (surgical or functional)", level: "mild", washout: "N/A", notes: "Specific risk for encapsulated organisms \u2014 requires pneumococcal, meningococcal, Hib", pneumoFunded: true, zosterFunded: false, covidSevere: false },
+    complementDeficiency: { label: "Complement deficiency", level: "mild", washout: "N/A", notes: "Meningococcal vaccination critical", pneumoFunded: false, zosterFunded: false, covidSevere: false },
   }}
 };
 
@@ -179,10 +179,9 @@ const KNOWN_VACCINES = [
   { id: "influenza", label: "Influenza (this season)", group: "Non-live" },
   { id: "shingrix1", label: "Shingrix \u2014 dose 1 only", group: "Non-live" },
   { id: "shingrix2", label: "Shingrix \u2014 course complete", group: "Non-live" },
-  { id: "pcv13", label: "13vPCV (Prevenar 13)", group: "Non-live" },
-  { id: "pcv20", label: "20vPCV (Prevenar 20)", group: "Non-live" },
-  { id: "ppv23_1", label: "23vPPV \u2014 dose 1", group: "Non-live" },
-  { id: "ppv23_2", label: "23vPPV \u2014 dose 2", group: "Non-live" },
+  { id: "p21vpcv", label: "21vPCV (Capvaxive) received", group: "Non-live" },
+  { id: "pcv_any", label: "Prior PCV (13v/15v/20v Prevenar/Vaxneuvance)", group: "Non-live" },
+  { id: "ppv_any", label: "Prior 23vPPV (Pneumovax 23) \u2014 any dose", group: "Non-live" },
   { id: "hepB_complete", label: "Hep B complete (anti-HBs \u226510)", group: "Non-live" },
   { id: "hepB_nonresponder", label: "Hep B \u2014 non-responder (anti-HBs <10)", group: "Non-live" },
   { id: "dtpa", label: "dTpa within last 10 years", group: "Non-live" },
@@ -191,6 +190,7 @@ const KNOWN_VACCINES = [
   { id: "menB", label: "Meningococcal B", group: "Non-live" },
   { id: "hib", label: "Hib", group: "Non-live" },
   { id: "hpv_complete", label: "HPV course complete", group: "Non-live" },
+  { id: "rsv", label: "RSV vaccine (Abrysvo or Arexvy)", group: "Non-live" },
   { id: "mmr2", label: "MMR \u00d72 or serologically immune", group: "Live" },
   { id: "varicella2", label: "Varicella immune (vaccine/serology/prior infection)", group: "Live" },
 ];
@@ -206,13 +206,14 @@ const state = {
   timing: "on_treatment",
   expCat: {},
   showKV: false,
+  initials: "",
 };
 
 function tog(arr, id) { return arr.includes(id) ? arr.filter(x => x !== id) : [...arr, id]; }
 
 function resetAll() {
   state.therapies = []; state.known = []; state.age = 40; state.atsi = false;
-  state.timing = "on_treatment"; state.expCat = {}; state.showKV = false;
+  state.timing = "on_treatment"; state.expCat = {}; state.showKV = false; state.initials = "";
   render();
 }
 
@@ -238,6 +239,18 @@ function calcLevel() {
 function getVaccines(level, age, atsi, therapies, known) {
   const has = t => therapies.includes(t);
   const kn = v => known.includes(v);
+  // Aggregate per-vaccine flags across selected therapies/conditions
+  const selected = [];
+  for (const cat of Object.values(THERAPY_CATEGORIES))
+    for (const [k, th] of Object.entries(cat.therapies))
+      if (therapies.includes(k)) selected.push({ ...th, id: k });
+  const anyFlag = f => selected.some(t => t[f]);
+  const notesFor = f => selected.filter(t => t[f]).map(t => t[f]);
+  const pneumoFundedFlag = anyFlag("pneumoFunded");
+  const zosterFundedFlag = anyFlag("zosterFunded");
+  const covidSevereFlag = anyFlag("covidSevere");
+  const covidNotes = notesFor("covidNote");
+  const pneumoNotes = notesFor("pneumoNote");
   const needsE = has("asplenia") || has("complementDeficiency") || has("eculizumab");
   const hasHIV = therapies.some(t => t.startsWith("hiv"));
   const hasHSCT = has("hsct"); const hasSOT = has("sot"); const hasHM = has("haemMalignActive");
@@ -246,25 +259,39 @@ function getVaccines(level, age, atsi, therapies, known) {
 
   V.push({ name: "Influenza (IIV)", type: "Non-live", schedule: "Annual \u2014 IIV only", ci: false, nip: true, nipNote: "Funded for IC conditions", notes: modSev ? "LAIV contraindicated." : "Prefer IIV.", priority: "essential", status: kn("influenza") ? "done" : "due", statusNote: kn("influenza") ? "Received this season" : "Due \u2014 annual" });
 
-  const sNIP = modSev || hasHIV || hasHM || hasSOT || hasHSCT;
+  const sNIP = zosterFundedFlag;
   const s2 = kn("shingrix2"), s1 = kn("shingrix1");
-  V.push({ name: "Shingrix", type: "Non-live", schedule: modSev ? "2 doses, 1\u20132mo apart" : "2 doses, 2\u20136mo apart", ci: false, nip: sNIP, nipNote: sNIP ? "NIP-funded moderate/severe IC \u226518yo" : "Private script for mild IC", notes: "Non-live recombinant adjuvanted. Safe on IS.", priority: modSev ? "essential" : "recommended", status: s2 ? "done" : s1 ? "partial" : "due", statusNote: s2 ? "Course complete" : s1 ? "Dose 1 done \u2014 dose 2 due" : "Not started" });
+  V.push({ name: "Shingrix", type: "Non-live", schedule: modSev ? "2 doses, 1\u20132mo apart" : "2 doses, 2\u20136mo apart", ci: false, nip: sNIP, nipNote: sNIP ? "NIP-funded \u2014 qualifying moderate/severe IC condition or therapy (\u226518yo)" : "Recommended for all IC \u226518yo; private script if not a funded condition/therapy", notes: "Non-live recombinant adjuvanted. Safe on IS.", priority: modSev ? "essential" : "recommended", status: s2 ? "done" : s1 ? "partial" : "due", statusNote: s2 ? "Course complete" : s1 ? "Dose 1 done \u2014 dose 2 due" : "Not started" });
 
-  const pNIP = modSev || needsE || hasHIV || hasSOT || hasHSCT || hasHM;
-  const hasPCV = kn("pcv13") || kn("pcv20"), hasPPV1 = kn("ppv23_1"), hasPPV2 = kn("ppv23_2");
-  let pSt = "due", pN = "Initiate with 13vPCV";
-  if (hasPPV2) { pSt = "done"; pN = "Schedule complete"; }
-  else if (hasPPV1 && hasPCV) { pSt = "partial"; pN = "PCV + 1st PPV done \u2014 2nd PPV due \u22655yr after 1st"; }
-  else if (hasPCV) { pSt = "partial"; pN = "PCV done \u2014 PPV due 12mo later (2\u201312mo ok)"; }
-  else if (hasPPV1) { pSt = "partial"; pN = "PPV given first \u2014 give PCV \u226512mo after PPV, then 2nd PPV \u22655yr after 1st"; }
-  V.push({ name: "Pneumococcal (PCV\u2192PPV)", type: "Non-live", schedule: "13vPCV \u2192 23vPPV at 12mo \u2192 2nd PPV \u22655yr", ci: false, nip: pNIP, nipNote: pNIP ? "NIP-funded for IC conditions" : "Private script", notes: needsE ? "HIGH PRIORITY \u2014 encapsulated organism risk" : "Check prior hx on AIR", priority: "essential", status: pSt, statusNote: pN });
+  // Pneumococcal — 1 July 2026 NIP program: single dose of 21vPCV (Capvaxive) for adults ≥18 with a
+  // risk condition. No PCV→PPV sequencing, no 23vPPV. Funding is CONDITION-driven (not severity-gated):
+  // funded conditions = asplenia, IEI, haem malignancy, SOT, HSCT, HIV, previous IPD, CSF leak/cochlear,
+  // eGFR<15/dialysis. Immunosuppressive therapy alone (reconstitution expected) and non-haem malignancy on
+  // chemo are recommended-but-NOT-funded. Any prior pneumococcal vaccine → 21vPCV ≥12mo after last dose.
+  const pNIPfunded = pneumoFundedFlag || needsE; // needsE = asplenia/complement/eculizumab → asplenia funds
+  const pRecommended = LEVEL_ORDER[level] >= 1 || therapies.length > 0;
+  const hadAnyPneumo = kn("pcv_any") || kn("ppv_any") || kn("p21vpcv");
+  const had21 = kn("p21vpcv");
+  let pSt = "due", pN = "Give single dose 21vPCV (Capvaxive)";
+  if (had21) { pSt = "done"; pN = "21vPCV received \u2014 schedule complete (further doses not yet established)"; }
+  else if (hadAnyPneumo) { pSt = "partial"; pN = "Prior pneumococcal vaccine \u2014 give 1 dose 21vPCV \u226512mo after last dose (NIP-funded regardless of timing)"; }
+  let pNote = needsE ? "HIGH PRIORITY \u2014 encapsulated organism risk" : "Single 21vPCV dose. Check prior hx on AIR.";
+  if (pneumoNotes.length) pNote += " " + pneumoNotes.join(" ");
+  V.push({ name: "Pneumococcal (21vPCV)", type: "Non-live", schedule: "Single dose 21vPCV (Capvaxive). No 23vPPV. Prior dose \u2192 21vPCV \u226512mo after.", ci: false, nip: pNIPfunded, nipNote: pNIPfunded ? "NIP-funded \u2014 qualifying risk condition (\u226518yo). Single 21vPCV dose." : "Recommended but NOT NIP-funded \u2014 immunosuppressive therapy alone (with expected reconstitution) is not a funded condition. Private script for 21vPCV.", notes: pNote, priority: "essential", status: pSt, statusNote: pN });
 
   const hbD = kn("hepB_complete"), hbNR = kn("hepB_nonresponder");
   V.push({ name: "Hepatitis B", type: "Non-live", schedule: "3-dose (0, 2, 6mo). Double-dose if NR.", ci: false, nip: false, nipNote: "State funding for some risk groups (ATSI, contacts, PWID)", notes: "Screen HBsAg, anti-HBc, anti-HBs. If HBsAg+ \u2192 antiviral Mx.", priority: "essential", status: hbD ? "done" : hbNR ? "action" : "due", statusNote: hbD ? "Immune (anti-HBs \u226510)" : hbNR ? "Non-responder \u2014 revaccinate (double-dose/4-dose)" : "Check serology" });
 
   V.push({ name: "dTpa", type: "Non-live", schedule: "10-yearly booster", ci: false, nip: false, nipNote: "NIP in pregnancy (20\u201332wk) only", notes: "No IC modification", priority: "routine", status: kn("dtpa") ? "done" : "due", statusNote: kn("dtpa") ? "Within last 10yr" : "Check last dose" });
 
-  V.push({ name: "COVID-19", type: "Non-live", schedule: "Per ATAGI seasonal advice", ci: false, nip: true, nipNote: "Per seasonal ATAGI guidance", notes: modSev ? "Reduced immunogenicity \u2014 may need extra doses" : "Standard dosing", priority: "recommended", status: kn("covid_uptodate") ? "done" : "due", statusNote: kn("covid_uptodate") ? "Up to date" : "Check current ATAGI advice" });
+  // COVID-19 — severe IC (per COVID table) → 2 primary doses + consider 3rd, then further doses every
+  // 12mo (consider 6-monthly). Standard adult → single primary dose, consider 12-monthly.
+  // Anti-TNF / anti-IL monotherapy explicitly NOT severe for COVID (handled via per-therapy covidSevere flags).
+  let covidNote = covidSevereFlag
+    ? "Severe IC: 2 primary doses + consider 3rd. Further doses every 12mo (consider 6-monthly). Reduced immunogenicity."
+    : "Single primary dose; consider further dose every 12mo. Anti-TNF/anti-IL monotherapy is not 'severe' for COVID dosing.";
+  if (covidNotes.length) covidNote += " " + covidNotes.join(" ");
+  V.push({ name: "COVID-19", type: "Non-live", schedule: covidSevereFlag ? "2 primary doses + consider 3rd; then \u226512-monthly (consider 6-monthly)" : "Single primary dose; consider 12-monthly", ci: false, nip: true, nipNote: "NIP-funded. Per current ATAGI seasonal guidance.", notes: covidNote, priority: covidSevereFlag ? "essential" : "recommended", status: kn("covid_uptodate") ? "done" : "due", statusNote: kn("covid_uptodate") ? "Up to date" : "Check current ATAGI advice" });
 
   const mNIP = needsE || hasHSCT || hasHIV;
   const mA = kn("menACWY"), mB = kn("menB");
@@ -282,6 +309,22 @@ function getVaccines(level, age, atsi, therapies, known) {
 
   V.push({ name: "HPV (Gardasil 9)", type: "Non-live", schedule: "3 doses (0, 2, 6mo)", ci: false, nip: age <= 25, nipNote: age <= 25 ? "NIP catch-up to 25yo" : "Private >25yo", notes: "3-dose for IC patients", priority: "recommended", status: kn("hpv_complete") ? "done" : "due", statusNote: kn("hpv_complete") ? "Course complete" : "Check AIR" });
 
+  // RSV — age-dependent recommendations (NIP funding from 15 May 2026: Arexvy for ≥75 and ATSI ≥60)
+  const rsvDone = kn("rsv");
+  const rsvATSI60 = atsi && age >= 60;
+  if (age >= 75) {
+    V.push({ name: "RSV (Arexvy)", type: "Non-live", schedule: "Single dose. Ideally pre-RSV season (autumn).", ci: false, nip: true, nipNote: "NIP-funded from 15 May 2026 (Arexvy only). Single dose, not annual. \u22652 seasons protection.", notes: "Recommended for all \u226575yo. Non-live protein-subunit \u2014 safe on IS. Can co-administer with flu/COVID/zoster/pneumococcal. Rare GBS signal \u2014 discuss.", priority: "recommended", status: rsvDone ? "done" : "due", statusNote: rsvDone ? "Received" : "Due \u2014 NIP-funded \u226575yo" });
+  } else if (rsvATSI60) {
+    V.push({ name: "RSV (Arexvy)", type: "Non-live", schedule: "Single dose. Ideally pre-RSV season (autumn).", ci: false, nip: true, nipNote: "NIP-funded from 15 May 2026 for ATSI \u226560yo (Arexvy only). Single dose, not annual.", notes: "Recommended for ATSI \u226560yo. Non-live \u2014 safe on IS. Can co-administer with flu/COVID/zoster/pneumococcal. Rare GBS signal \u2014 discuss.", priority: "recommended", status: rsvDone ? "done" : "due", statusNote: rsvDone ? "Received" : "Due \u2014 NIP-funded ATSI \u226560yo" });
+  } else if (age >= 60 && modSev) {
+    V.push({ name: "RSV (Arexvy or Abrysvo)", type: "Non-live", schedule: "Single dose. Ideally pre-RSV season.", ci: false, nip: false, nipNote: "Not NIP-funded for 60\u201374 non-ATSI. Arexvy ~$300 private. Abrysvo also registered \u226560.", notes: "Recommended for 60\u201374yo with IC risk conditions. Non-live \u2014 safe on IS. Rare GBS signal.", priority: "recommended", status: rsvDone ? "done" : "due", statusNote: rsvDone ? "Received" : "Due \u2014 recommended (IC + \u226560yo) but not NIP-funded" });
+  } else if (age >= 60) {
+    V.push({ name: "RSV (Arexvy or Abrysvo)", type: "Non-live", schedule: "Single dose. Ideally pre-RSV season.", ci: false, nip: false, nipNote: "Not NIP-funded for 60\u201374 non-ATSI without risk conditions.", notes: "Can consider for 60\u201374yo. Lower benefit than \u226575yo. Rare GBS signal.", priority: "consider", status: rsvDone ? "done" : "consider", statusNote: rsvDone ? "Received" : "Can consider \u2014 not NIP-funded" });
+  } else if (age >= 50 && modSev) {
+    V.push({ name: "RSV (Arexvy only)", type: "Non-live", schedule: "Single dose. Ideally pre-RSV season.", ci: false, nip: false, nipNote: "Not NIP-funded. Private script ~$300.", notes: "Can consider for 50\u201359yo with IC risk conditions. Arexvy only (Abrysvo not registered 50\u201359). Non-live \u2014 safe on IS.", priority: "consider", status: rsvDone ? "done" : "consider", statusNote: rsvDone ? "Received" : "Can consider \u2014 Arexvy only, private script" });
+  }
+  // <50yo: RSV not registered, not shown
+
   const mmrOk = kn("mmr2");
   V.push({ name: "MMR", type: "LIVE", schedule: modSev ? "CONTRAINDICATED on therapy" : "2 doses if non-immune", ci: modSev && !mmrOk, nip: false, nipNote: "Some state catch-up funding", notes: modSev ? (mmrOk ? "Immune \u2014 no action" : "Check measles/rubella serology \u2192 cocoon if non-immune \u2192 vaccinate post-washout") : "Can give in mild IC \u2014 specialist assessment", priority: mmrOk ? "done_live" : (modSev ? "check_serology" : "recommended"), status: mmrOk ? "done" : (modSev ? "contraindicated" : "due"), statusNote: mmrOk ? "Immune" : (modSev ? "CI \u2014 check serology, cocoon contacts" : "Check serology, give if non-immune") });
 
@@ -292,9 +335,159 @@ function getVaccines(level, age, atsi, therapies, known) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// PJP PROPHYLAXIS LOGIC
+// ═══════════════════════════════════════════════════════════════════════════════
+function getPJP(therapies, level) {
+  const has = t => therapies.includes(t);
+  const modSev = LEVEL_ORDER[level] >= 2;
+
+  // Count immunosuppressive agents for combination risk
+  const isAgents = [];
+  for (const cat of Object.values(THERAPY_CATEGORIES))
+    for (const [k, th] of Object.entries(cat.therapies))
+      if (therapies.includes(k) && LEVEL_ORDER[th.level] >= 1) isAgents.push(k);
+
+  const hasCorticoMod = has("predMod") || has("predHigh") || has("predPulse");
+  const hasCorticoHigh = has("predHigh") || has("predPulse");
+  const hasAntiTNF = has("antiTNF_monoclonal") || has("etanercept");
+  const hasRituximab = has("rituximab");
+  const hasAlemtuzumab = has("alemtuzumab");
+  const hasCyclophosphamide = has("cyclophosphamide");
+  const hasSOT = has("sot");
+  const hasHSCT = has("hsct");
+  const hasHIVsevere = has("hivSevere");
+  const hasHIVmod = has("hivModerate");
+  const hasHaemActive = has("haemMalignActive");
+  const hasJAK = has("jakInhibitor");
+  const hasCNI = has("calcineurin");
+  const hasMTOR = has("mtorInhibitor");
+  const hasMMFhigh = has("mmfHigh");
+
+  // Triple IS: biologic/conventional + thiopurine/MMF + steroid
+  const hasConventionalIS = has("azaLow") || has("azaHigh") || has("mercaptoLow") || has("mercaptoHigh") || has("mmfLow") || has("mmfHigh") || has("mtxLow") || has("mtxHigh");
+  const hasBiologic = hasAntiTNF || has("antiIL6") || has("abatacept") || has("natalizumab") || has("belimumab") || hasRituximab;
+  const tripleIS = (hasBiologic || hasConventionalIS) && hasCorticoMod && isAgents.length >= 3;
+
+  let indication = "not_indicated"; // not_indicated, consider, indicated
+  let reasons = [];
+  let duration = "";
+  let notes = [];
+
+  // ── INDICATED ──
+  if (hasAlemtuzumab) {
+    indication = "indicated";
+    reasons.push("Alemtuzumab \u2014 profound T-cell depletion");
+    duration = "\u22656 months post-treatment or until CD4 >200 for \u22653 months";
+  }
+  if (hasCyclophosphamide && hasCorticoMod) {
+    indication = "indicated";
+    reasons.push("Cyclophosphamide + corticosteroids");
+    duration = "For duration of therapy + \u22651 month after cessation";
+  }
+  if (hasCyclophosphamide && !hasCorticoMod) {
+    if (indication !== "indicated") { indication = "indicated"; }
+    reasons.push("Cyclophosphamide");
+    duration = duration || "For duration of therapy + \u22651 month after cessation";
+  }
+  if (hasRituximab && hasCorticoMod) {
+    indication = "indicated";
+    reasons.push("Rituximab + corticosteroids \u2014 combined B-cell and T-cell suppression");
+    duration = duration || "For duration of therapy. Consider until B-cell recovery + steroid cessation.";
+  }
+  if (hasCorticoHigh) {
+    indication = "indicated";
+    reasons.push("Prednisolone \u226520 mg/day \u2014 high-dose corticosteroid");
+    duration = duration || "For duration of high-dose therapy. Review when dose <10 mg/day.";
+  }
+  if (has("predPulse")) {
+    indication = "indicated";
+    reasons.push("Pulse IV methylprednisolone");
+    duration = duration || "During and after pulse therapy until maintenance dose <10 mg/day";
+  }
+  if (hasSOT) {
+    indication = "indicated";
+    reasons.push("Solid organ transplant");
+    duration = duration || "\u22656\u201312 months post-transplant. Many centres continue lifelong if on \u22652 IS agents.";
+  }
+  if (hasHSCT) {
+    indication = "indicated";
+    reasons.push("HSCT");
+    duration = duration || "\u22656 months post-transplant. Continue if ongoing IS or GvHD.";
+  }
+  if (hasHIVsevere) {
+    indication = "indicated";
+    reasons.push("HIV with CD4 <100");
+    duration = duration || "Until CD4 >200 for \u22653 months on ART";
+  }
+  if (hasHIVmod) {
+    indication = "indicated";
+    reasons.push("HIV with CD4 100\u2013199");
+    duration = duration || "Until CD4 >200 for \u22653 months on ART";
+  }
+  if (hasHaemActive) {
+    indication = "indicated";
+    reasons.push("Active haematological malignancy on treatment");
+    duration = duration || "For duration of chemotherapy + until immune reconstitution. Specialist-directed.";
+    notes.push("Particularly important with ALL, lymphoma (esp. purine analogues), or corticosteroid-containing regimens.");
+  }
+  if (tripleIS) {
+    indication = "indicated";
+    reasons.push("Triple immunosuppression (\u22653 agents including corticosteroid)");
+    duration = duration || "For duration of combination therapy. Review on de-escalation.";
+  }
+
+  // ── CONSIDER ──
+  if (indication !== "indicated") {
+    if (has("predMod")) {
+      indication = "consider";
+      reasons.push("Prednisolone 10\u201320 mg/day for >4 weeks \u2014 moderate-dose steroid");
+      duration = "Consider while on \u226510 mg/day";
+      notes.push("Risk increases with dose and duration. Some guidelines use \u226520 mg as threshold; others \u226516 mg for \u22658 weeks.");
+    }
+    if (hasRituximab && !hasCorticoMod) {
+      indication = "consider";
+      reasons.push("Rituximab monotherapy \u2014 B-cell depletion increases PJP risk especially if prior steroid exposure");
+      duration = duration || "Consider for 6\u201312 months post-infusion or until B-cell recovery";
+    }
+    if (hasJAK) {
+      indication = "consider";
+      reasons.push("JAK inhibitor \u2014 case reports of PJP, particularly tofacitinib");
+      duration = duration || "Consider if combined with other IS or corticosteroids";
+      notes.push("No formal guideline recommendation. Risk increases in combination regimens.");
+    }
+    if (hasAntiTNF && hasConventionalIS && !hasCorticoMod) {
+      indication = "consider";
+      reasons.push("Anti-TNF + conventional IS (dual therapy without steroid)");
+      duration = duration || "Consider while on combination therapy";
+    }
+    if (hasCNI && !hasSOT) {
+      indication = "consider";
+      reasons.push("Calcineurin inhibitor outside transplant context");
+      duration = duration || "Consider if combined with other IS";
+    }
+    if (hasMTOR && !hasSOT) {
+      indication = "consider";
+      reasons.push("mTOR inhibitor \u2014 case reports of PJP");
+      duration = duration || "Consider if combined with other IS";
+    }
+    if (hasMMFhigh && isAgents.length >= 2 && !hasCorticoMod) {
+      indication = "consider";
+      reasons.push("High-dose mycophenolate + other IS");
+      duration = duration || "Consider while on combination therapy";
+    }
+  }
+
+  if (indication === "not_indicated" && isAgents.length > 0) {
+    notes.push("Low PJP risk with current therapy. Reassess if regimen escalated or corticosteroids added.");
+  }
+
+  return { indication, reasons, duration, notes };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // PRINT
 // ═══════════════════════════════════════════════════════════════════════════════
-function handlePrint(vaccines, details, level, combo) {
+function handlePrint(vaccines, details, level, combo, pjp) {
   const pw = window.open('', '_blank');
   const today = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
   const row = v => `<tr style="background:${v.status==='contraindicated'?'#fef2f2':v.status==='done'?'#f0fdf4':'transparent'}">
@@ -310,16 +503,24 @@ function handlePrint(vaccines, details, level, combo) {
   const action = vaccines.filter(v => v.status !== "done" && v.status !== "consider");
   const done = vaccines.filter(v => v.status === "done");
   pw.document.write(`<!DOCTYPE html><html><head><title>Vaccination Plan</title></head><body style="font-family:'Segoe UI',system-ui,sans-serif;max-width:210mm;margin:0 auto;padding:10mm 14mm;font-size:11px;color:#1f2937">
-    <div style="display:flex;justify-content:space-between;border-bottom:3px solid #1e3a5f;padding-bottom:6px;margin-bottom:10px"><div><h1 style="margin:0;font-size:16px;color:#1e3a5f">Vaccination Recommendations \u2014 Immunocompromised Patient</h1><p style="margin:2px 0 0;font-size:10px;color:#6b7280">Clinical decision support \u2014 Australian Immunisation Handbook (ATAGI)</p></div><div style="text-align:right;font-size:9px;color:#6b7280">Generated: ${today}<br>Handbook: March 2026</div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:2px">Patient</div>Age: <b>${state.age}</b> | ATSI: <b>${state.atsi?'Yes':'No'}</b> | <b>${state.timing==='pre_treatment'?'Pre-treatment':state.timing==='on_treatment'?'On treatment':'Recently ceased'}</b></div>
+    <div style="display:flex;justify-content:space-between;border-bottom:3px solid #1e3a5f;padding-bottom:6px;margin-bottom:10px"><div><h1 style="margin:0;font-size:16px;color:#1e3a5f">Vaccination Recommendations \u2014 Immunocompromised Patient</h1><p style="margin:2px 0 0;font-size:10px;color:#6b7280">Clinical decision support \u2014 Australian Immunisation Handbook (ATAGI)</p></div><div style="text-align:right;font-size:9px;color:#6b7280">Generated: ${today}<br>Handbook: ATAGI (current); 21vPCV program 1 Jul 2026</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:2px">Patient</div>${state.initials ? '<b style="font-size:14px">' + state.initials + '</b> &mdash; ' : ''}Age: <b>${state.age}</b> | ATSI: <b>${state.atsi?'Yes':'No'}</b> | <b>${state.timing==='pre_treatment'?'Pre-treatment':state.timing==='on_treatment'?'On treatment':'Recently ceased'}</b></div>
     <div style="background:${level==='severe'?'#fef2f2':level==='moderate'?'#fffbeb':'#eff6ff'};border:1px solid ${LEVEL_BORDER[level]};border-radius:4px;padding:6px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:2px">Immunocompromise</div><div style="font-weight:700;color:${LEVEL_COLORS[level]};font-size:14px">${LEVEL_LABELS[level]}</div></div></div>
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:6px;margin-bottom:8px"><div style="font-size:9px;text-transform:uppercase;color:#64748b;margin-bottom:3px">Therapies</div>${details.map(d=>`<div>\u2022 ${d.label} <span style="color:${LEVEL_COLORS[d.level]};font-weight:600;font-size:9px">[${LEVEL_LABELS[d.level]}]</span></div>`).join('')}</div>
     ${combo?`<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:6px;margin-bottom:8px;font-size:10px;color:#991b1b"><b>\u26A0</b> ${combo}</div>`:''}
     ${action.length>0?'<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1e40af;margin-bottom:4px">Action Required</div>'+tbl(action):''}
     ${done.length>0?'<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#16a34a;margin-bottom:4px">Completed</div>'+tbl(done):''}
     ${wo?`<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#64748b;margin-bottom:3px">Washout Periods</div><table style="width:55%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#f3f4f6"><th style="padding:3px 6px;border:1px solid #d1d5db;text-align:left">Therapy</th><th style="padding:3px 6px;border:1px solid #d1d5db;text-align:left">Washout</th></tr></thead><tbody>${wo}</tbody></table>`:''}
+    ${pjp.indication !== 'not_indicated' ? `<div style="background:${pjp.indication==='indicated'?'#fef2f2':'#fffbeb'};border:1px solid ${pjp.indication==='indicated'?'#fecaca':'#fde68a'};border-radius:4px;padding:8px;margin:8px 0;font-size:10px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:${pjp.indication==='indicated'?'#991b1b':'#92400e'};margin-bottom:4px">\uD83D\uDEE1\uFE0F PJP Prophylaxis \u2014 ${pjp.indication==='indicated'?'INDICATED':'CONSIDER'}</div>
+      <div style="margin-bottom:4px">${pjp.reasons.map(r => '<div>\u2022 ' + r + '</div>').join('')}</div>
+      ${pjp.duration ? '<div style="margin-bottom:4px"><b>Duration:</b> ' + pjp.duration + '</div>' : ''}
+      <div><b>First-line:</b> TMP-SMX 160/800mg (DS) daily or Mon/Wed/Fri</div>
+      <div><b>Alternatives:</b> Dapsone 100mg daily (check G6PD) | Atovaquone 1500mg daily | Nebulised pentamidine 300mg monthly</div>
+      ${pjp.notes.length ? '<div style="margin-top:3px;color:#6b7280;font-style:italic">' + pjp.notes.join(' ') + '</div>' : ''}
+    </div>` : ''}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0"><div style="padding:6px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:10px"><b>Serology:</b> VZV IgG, measles IgG, rubella IgG, anti-HBs (\u00b1 HBsAg/anti-HBc). Pneumococcal hx on AIR.</div><div style="padding:6px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:10px"><b>Contacts:</b> MMR, varicella, annual influenza up to date. Live vaccines safe for contacts.</div></div>
-    <div style="border-top:1px solid #d1d5db;padding-top:6px;font-size:8px;color:#9ca3af"><b>Disclaimer:</b> Clinical decision support for specialist physicians. Australian Immunisation Handbook (ATAGI, March 2026). Does not replace clinical judgement. Verify NIP at vaccination. HSCT \u2192 specialist revaccination protocol.</div></body></html>`);
+    <div style="border-top:1px solid #d1d5db;padding-top:6px;font-size:8px;color:#9ca3af"><b>Disclaimer:</b> Clinical decision support for specialist physicians. Australian Immunisation Handbook (ATAGI, current). Does not replace clinical judgement. Verify NIP at vaccination. HSCT \u2192 specialist revaccination protocol.</div></body></html>`);
   pw.document.close();
   pw.print();
 }
@@ -345,12 +546,13 @@ function render() {
   let h = '';
 
   // Header
-  h += `<div class="hdr"><div><h1>Australian IC Vaccination Calculator</h1><div class="hdr-sub">Australian Immunisation Handbook \u2014 ATAGI, March 2026</div></div><button class="btn-reset" onclick="resetAll()">\u27F3 Reset All</button></div>`;
+  h += `<div class="hdr"><div><h1>Australian IC Vaccination Calculator</h1><div class="hdr-sub">Australian Immunisation Handbook \u2014 ATAGI (current)</div></div><button class="btn-reset" onclick="resetAll()">\u27F3 Reset All</button></div>`;
   h += `<div class="body-wrap">`;
 
   // Demographics
   h += `<div class="sec sec-line"><div class="sec-title">Patient</div><div class="row">`;
   h += `<div><div class="lbl">Age</div><input type="number" id="age-input" value="${state.age}" min="18" max="110"></div>`;
+  h += `<div><div class="lbl">Patient Initials</div><input type="text" id="initials-input" value="${esc(state.initials)}" maxlength="10" placeholder="e.g. JDS" style="padding:5px 8px;border:1px solid #cbd5e1;border-radius:5px;font-size:13px;width:80px;background:#fff;font-family:inherit;text-transform:uppercase"></div>`;
   h += `<div><div class="lbl">ATSI</div><div class="radio-group"><label><input type="radio" name="atsi" value="no" ${!state.atsi?'checked':''}> No</label><label><input type="radio" name="atsi" value="yes" ${state.atsi?'checked':''}> Yes</label></div></div>`;
   h += `<div><div class="lbl">Timing</div><select id="timing-select"><option value="pre_treatment" ${state.timing==='pre_treatment'?'selected':''}>Pre-treatment</option><option value="on_treatment" ${state.timing==='on_treatment'?'selected':''}>On treatment</option><option value="recently_ceased" ${state.timing==='recently_ceased'?'selected':''}>Recently ceased</option></select></div>`;
   h += `</div>`;
@@ -429,12 +631,42 @@ function render() {
       h += `</tbody></table></div>`;
     }
 
+    // PJP Prophylaxis
+    const pjp = getPJP(state.therapies, level);
+    if (pjp.indication === "indicated") {
+      h += `<div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border:2px solid #fecaca;border-radius:6px;padding:12px;margin:10px 0">`;
+      h += `<div style="font-size:12px;font-weight:700;color:#991b1b;margin-bottom:6px">\uD83D\uDEE1\uFE0F PJP Prophylaxis \u2014 INDICATED</div>`;
+      h += `<div style="font-size:12px;margin-bottom:6px">${pjp.reasons.map(r => '<div style="padding:1px 0">\u2022 ' + esc(r) + '</div>').join('')}</div>`;
+      if (pjp.duration) h += `<div style="font-size:12px;margin-bottom:6px"><b>Duration:</b> ${esc(pjp.duration)}</div>`;
+      h += `<div style="font-size:11px;background:#fff;border-radius:4px;padding:8px;border:1px solid #e2e8f0">`;
+      h += `<div style="font-weight:700;margin-bottom:3px">Regimen Options</div>`;
+      h += `<div><b>First-line:</b> TMP-SMX 160/800mg (DS) daily <i>or</i> Mon/Wed/Fri</div>`;
+      h += `<div><b>Alternatives:</b> Dapsone 100mg daily (check G6PD) | Atovaquone 1500mg daily | Nebulised pentamidine 300mg monthly</div>`;
+      h += `</div>`;
+      if (pjp.notes.length) h += `<div style="font-size:11px;color:#6b7280;font-style:italic;margin-top:4px">${pjp.notes.map(n => esc(n)).join(' ')}</div>`;
+      h += `</div>`;
+    } else if (pjp.indication === "consider") {
+      h += `<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fde68a;border-radius:6px;padding:12px;margin:10px 0">`;
+      h += `<div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:6px">\uD83D\uDEE1\uFE0F PJP Prophylaxis \u2014 CONSIDER</div>`;
+      h += `<div style="font-size:12px;margin-bottom:6px">${pjp.reasons.map(r => '<div style="padding:1px 0">\u2022 ' + esc(r) + '</div>').join('')}</div>`;
+      if (pjp.duration) h += `<div style="font-size:12px;margin-bottom:6px"><b>Duration:</b> ${esc(pjp.duration)}</div>`;
+      h += `<div style="font-size:11px;background:#fff;border-radius:4px;padding:8px;border:1px solid #e2e8f0">`;
+      h += `<div style="font-weight:700;margin-bottom:3px">If initiating prophylaxis</div>`;
+      h += `<div><b>First-line:</b> TMP-SMX 160/800mg (DS) daily <i>or</i> Mon/Wed/Fri</div>`;
+      h += `<div><b>Alternatives:</b> Dapsone 100mg daily (check G6PD) | Atovaquone 1500mg daily | Nebulised pentamidine 300mg monthly</div>`;
+      h += `</div>`;
+      if (pjp.notes.length) h += `<div style="font-size:11px;color:#6b7280;font-style:italic;margin-top:4px">${pjp.notes.map(n => esc(n)).join(' ')}</div>`;
+      h += `</div>`;
+    } else if (state.therapies.length > 0 && pjp.notes.length > 0) {
+      h += `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:8px;margin:8px 0;font-size:11px;color:#64748b"><b>\uD83D\uDEE1\uFE0F PJP Prophylaxis:</b> ${pjp.notes.map(n => esc(n)).join(' ')}</div>`;
+    }
+
     // Info
     h += `<div class="info-grid"><div class="info-sero"><b style="color:#166534">Serology:</b> VZV IgG, measles IgG, rubella IgG, anti-HBs (\u00b1 HBsAg/anti-HBc). Pneumococcal hx on AIR.</div><div class="info-contacts"><b style="color:#1e40af">Contacts:</b> MMR, varicella, annual influenza up to date. Live vaccines safe for contacts.</div></div>`;
 
     // Buttons
     h += `<div class="btn-row"><button class="btn-print" onclick="doPrint()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print Plan</button><button class="btn-reset" onclick="resetAll()">\u27F3 Reset All</button></div>`;
-    h += `<div class="disclaimer"><b>Disclaimer:</b> Clinical decision support for specialist physicians. Australian Immunisation Handbook (ATAGI, March 2026). Does not replace clinical judgement. Verify NIP at vaccination. HSCT \u2192 specialist revaccination.</div>`;
+    h += `<div class="disclaimer"><b>Disclaimer:</b> Clinical decision support for specialist physicians. Australian Immunisation Handbook (ATAGI, current). Does not replace clinical judgement. Verify NIP at vaccination. HSCT \u2192 specialist revaccination.</div>`;
     h += `</div>`;
   } else {
     h += `<div class="empty"><div class="empty-icon">\uD83D\uDC89</div><div class="empty-text">Select therapies or conditions above</div><div class="empty-sub">Recommendations generated based on immunocompromise level</div></div>`;
@@ -446,6 +678,8 @@ function render() {
   // Bind events
   const ageInput = document.getElementById('age-input');
   if (ageInput) ageInput.addEventListener('change', e => { state.age = parseInt(e.target.value) || 18; render(); });
+  const initialsInput = document.getElementById('initials-input');
+  if (initialsInput) initialsInput.addEventListener('input', e => { state.initials = e.target.value.toUpperCase(); });
   document.querySelectorAll('input[name="atsi"]').forEach(r => r.addEventListener('change', e => { state.atsi = e.target.value === 'yes'; render(); }));
   const timingSel = document.getElementById('timing-select');
   if (timingSel) timingSel.addEventListener('change', e => { state.timing = e.target.value; render(); });
@@ -461,7 +695,8 @@ window.clearKnown = function() { state.known = []; render(); };
 window.doPrint = function() {
   const { level, combo, details } = calcLevel();
   const vaccines = getVaccines(level, state.age, state.atsi, state.therapies, state.known);
-  handlePrint(vaccines, details, level, combo);
+  const pjp = getPJP(state.therapies, level);
+  handlePrint(vaccines, details, level, combo, pjp);
 };
 
 // Initial render
